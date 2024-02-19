@@ -2,6 +2,7 @@
 import {Dialog} from "@mui/material"
 import Enviroment from "../core"
 import { useState , useEffect} from "react"
+import axios from "axios"
 const login = "login"
 const signUp = "signup"
 export default function Header(props){
@@ -22,8 +23,7 @@ export default function Header(props){
           setAuth(null)
           setAuthentication(null)
         }
-       
-      }else{
+            }else{
           setAuth(null)
           setAuthentication(null)
         }
@@ -31,11 +31,9 @@ export default function Header(props){
       },[])
       const onLogin = (e)=>{
         e.preventDefault()
-        console.log(e.target.email.value)
         const body = {email: e.target.email.value,
           password: e.target.password.value}
           axios.post(Enviroment.BASE_URL + '/auth/login',body).then(response=>{
-            console.log(response)
             const {data} = response
             const {token}=data
             setAuth(token)
@@ -91,7 +89,7 @@ export default function Header(props){
         {auth?<div></div>:<div className="auth--buttons"><button className="auth--button"onClick={()=>setAuthentication(signUp)}>Sign Up</button>
      <button className="auth--button"onClick={()=>setAuthentication(login)}>Log In</button></div>
      }  
-    <Dialog onClose={()=>{setAuthentication(null)}}open={authentication}>
+    <Dialog onClose={()=>{setAuthentication(null)}} open={Boolean(authentication)}>
      {authenticating()}
      </Dialog>
 

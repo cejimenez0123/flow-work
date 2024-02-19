@@ -2,20 +2,22 @@
 
 
 class ForkControl{
-    id
-    task
-    choices = []
-    userId
-    constructor(task="start",
-    choices=[new ForkControl("high",
-                    []),
-            new ForkControl("low",
-                    [])],id,userId=null){
-                        this.id=id
-        this.task=task
-        this.choices = choices
-      this.userId=userId
-    }
+   id
+   name
+   dueDate
+   completed
+   userId
+   parentId
+   forks
+   constructor(id,name,dueDate,completed=false,userId,parentId,forks){
+    this.id = id;
+    this.name = name;
+    this.dueDate = dueDate;
+    this.completed = completed;
+    this.userId = userId;
+    this.parentId = parentId;
+    this.forks = forks;
+   }
 }
 
 export default ForkControl
