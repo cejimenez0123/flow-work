@@ -8,27 +8,6 @@ const signUp = "signup"
 export default function Header(props){
     const [auth,setAuth] = useState(null)
     const [authentication,setAuthentication] = useState(null)
-    // useEffect(()=>{
-    //     let token = localStorage.getItem("token")
-    //     let tokenTimestamp = JSON.parse(localStorage.getItem("tokenTimestamp"))
-    //     const currentTimestamp = Date.now();
-    //     const threeHoursAgo = currentTimestamp - (3 * 60 * 60 * 1000);
-    //     if (tokenTimestamp > threeHoursAgo) {
-    
-    //     if(token){
-          
-    //       setAuth(token)
-    //       setAuthentication(null)
-    //     }else{
-    //       setAuth(null)
-    //       setAuthentication(null)
-    //     }
-    //         }else{
-    //       setAuth(null)
-    //       setAuthentication(null)
-    //     }
-       
-    //   },[])
       const onLogin = (e)=>{
         e.preventDefault()
         const body = {email: e.target.email.value,
@@ -117,7 +96,8 @@ export default function Header(props){
     return(<header>
         <h2 className="Logo">FlowTree</h2>
         {auth?<div className="auth--buttons" ><button onClick={onLogOut} className="auth--button">Log Out</button></div>:<div className="auth--buttons"><button className="auth--button"onClick={()=>setAuthentication(signUp)}>Sign Up</button>
-     <button className="auth--button"onClick={()=>setAuthentication(login)}>Log In</button></div>
+     <button className="auth--button"
+     onClick={()=>setAuthentication(login)}>Log In</button></div>
      }  
     <Dialog style={{height:"fit-content"}}onClose={()=>{setAuthentication(null)}} open={Boolean(authentication)}>
      {authenticating()}

@@ -25,7 +25,6 @@ function Fork({root}){
     },[])
 
     const changeUrl =(root)=>{
-  
         if(root.userId!==Enviroment.ADMIN_UID || Enviroment.root_array.includes(root.id)){
             setUrl(Enviroment.BASE_URL+`/fork/protected/children/${root.id}`)
         }else{
@@ -125,17 +124,6 @@ const TaskName=()=>{
                     Do you want to {taskName}:______?
                 </h6>
 }
-
-    
-           
-        
-           
-        
-
-   
-
-
-
 
    return(<div className="fork">
        {choice? 
