@@ -25,7 +25,10 @@ function Fork({root}){
     },[])
 
     const changeUrl =(root)=>{
-        if(root.userId!==Enviroment.ADMIN_UID || Enviroment.root_array.includes(root.id)){
+        if(localStorage.getItem("token")!==null && 
+        ((root.userId !== Enviroment.ADMIN_UID && !Enviroment.root_array.includes(root.id)
+            ))){
+            
             setUrl(Enviroment.BASE_URL+`/fork/protected/children/${root.id}`)
         }else{
             setUrl(Enviroment.BASE_URL+`/fork/children/${root.id??"65ce6f093ed66e8a5da96c07"}`)
@@ -46,47 +49,6 @@ function Fork({root}){
     const handlePlus = ()=>{
         setPlus(true)
     }
-    const createTask = ()=>{
-        let token = localStorage.getItem("token")
-       
-        if(token){
-       
-        axios.post(Enviroment.BASE_URL + '/fork/',{
-            parentFork:root,
-            task:task.toLowerCase(),
-            },
-       {headers: {
-            Authorization: 'Bearer ' + token
-       }}).then(
-            response=>{
-            setChoices(prevState=>[response.data,...prevState])
-             
-            }
-        ).catch(error=>{
-       
-
-        })
-    }else{
-        window.alert("No Token")
-    }
-    }
-    const handleChange = (e)=>{
-        e.preventDefault()
-        setTask(e.currentTarget.value)
-    }
-    if(error){
-        if(error.response.data.includes("jwt expired")){
-            return <div>
-               <h2> Sign In for more</h2>
-            </div>
-        }
-        
-        return(<div>Error:{error.message}</div>)
-    }
-    if(url.length<1||isLoading){
-        return(<div><div className="loading"><Skeleton width={"100%"} height={"100%"}/></div></div>)
-    }
-
     const Choices = ()=>{
        
         if(choices.length>0){
@@ -117,13 +79,57 @@ function Fork({root}){
     }
 
 }
+    const TaskName=()=>{
+        return<h6 className="task">
+                        Do you want to {taskName}:______?
+                    </h6>
+    }
+    const createTask = ()=>{
+        let token = localStorage.getItem("token")
+       
+        if(token){
+       
+        axios.post(Enviroment.BASE_URL + '/fork/',{
+            parentFork:root,
+            task:task.toLowerCase(),
+            },
+       {headers: {
+            Authorization: 'Bearer ' + token
+       }}).then(
+            response=>{
+            setChoices(prevState=>[response.data,...prevState])
+             
+            }
+        ).catch(error=>{
+       
+
+        })
+    }else{
+        window.alert("No Token")
+    }
+    }
+    const handleChange = (e)=>{
+        e.preventDefault()
+        setTask(e.currentTarget.value)
+    }
+    if(error){
+     
+        if(error.response.data.includes("jwt expired")){
+            return <div>
+               <h2> Sign In for more</h2>
+            </div>
+        }
+        
+        return(<div>Error:{error.message}</div>)
+    }
+    if(url.length<1||isLoading){
+        return(<div><div className="loading"><Skeleton width={"100%"} height={"100%"}/></div></div>)
+    }
+
+    
 
 
-const TaskName=()=>{
-    return<h6 className="task">
-                    Do you want to {taskName}:______?
-                </h6>
-}
+
 
    return(<div className="fork">
        {choice? 
@@ -139,9 +145,8 @@ const TaskName=()=>{
             <div className={initial?"render":""}  >
             <Choices/>
             </div>
-            {  root 
-        && choices.length == 0 &&
-        localStorage.getItem("token")?
+            {(false||(root && root.userId !== Enviroment.ADMIN_UID))?
+                
                plus ?
         <div className="create">
             <input  value={task} 
@@ -153,7 +158,7 @@ const TaskName=()=>{
                     </button>
                 </div>:<button className="create--button" onClick={handlePlus}>+</button>
            :
-            root.userId !== Enviroment.ADMIN_UID || choices.length==0?
+           (root.userId!==Enviroment.ADMIN_UID||Enviroment.root_array.includes(root.id))?
                 <div className="create--disabled">
                     <button className="create--button disabled"disabled>+</button>
                     <div className="disabled--div">
@@ -162,7 +167,6 @@ const TaskName=()=>{
                 </div>:<div></div>
              
             }
-            {/* <CreateInputs/> */}
             </div>
         }
    </div>)
