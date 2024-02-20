@@ -24,20 +24,22 @@ export default function Header(props){
       const checkAuth=()=>{
         const token =localStorage.getItem('token')
         if(token){
+          console.log(token)
           axios.get(Enviroment.BASE_URL+"/auth/", { 
             headers: 
               { Authorization: "Bearer " + token,
              AccessControlAllowOrigin: '*'}
             }).then(res=>{
+            if(res.status==401){
+                localStorage.setItem('token',null)
+                setAuth(null)
+                setAuthentication(null)
+               }
             if(res.status==200){
               setAuth(token)
               setAuthentication(null)
             }
-             if(res.status==401){
-              localStorage.setItem('token',null)
-              setAuth(null)
-              setAuthentication(null)
-             }
+           
           })
         }
       }

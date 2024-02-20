@@ -15,6 +15,7 @@ function Fork({root}){
     const [task,setTask]=useState("")
     const [url,setUrl]=useState((Enviroment.BASE_URL+`/fork/children/${root.id??"65ce6f093ed66e8a5da96c07"}`))
     const [taskName,setTaskName]=useState("")
+    const [auth,setAuth]=useState(null)
     const [initial,setInitial]=useState(true)
     useLayoutEffect(()=>{
             if(root){
@@ -25,12 +26,13 @@ function Fork({root}){
     },[])
 
     const changeUrl =(root)=>{
-        if(localStorage.getItem("token")!==null && 
+        if(localStorage.getItem("token")!=="null" && localStorage.getItem("token")!==null && 
         ((root.userId !== Enviroment.ADMIN_UID && !Enviroment.root_array.includes(root.id)
             ))){
-            
+            setAuth(false)
             setUrl(Enviroment.BASE_URL+`/fork/protected/children/${root.id}`)
         }else{
+            setAuth(true)
             setUrl(Enviroment.BASE_URL+`/fork/children/${root.id??"65ce6f093ed66e8a5da96c07"}`)
         }
     }
@@ -88,7 +90,7 @@ function Fork({root}){
         let token = localStorage.getItem("token")
        
         if(token){
-       
+     
         axios.post(Enviroment.BASE_URL + '/fork/',{
             parentFork:root,
             task:task.toLowerCase(),
@@ -145,7 +147,9 @@ function Fork({root}){
             <div className={initial?"render":""}  >
             <Choices/>
             </div>
-            {(false||(root && root.userId !== Enviroment.ADMIN_UID))?
+            {(root && 
+            ((root.userId !== Enviroment.ADMIN_UID)||
+            (localStorage.getItem("token")!=="null" && Enviroment.root_array.includes(root.id))))?
                 
                plus ?
         <div className="create">
