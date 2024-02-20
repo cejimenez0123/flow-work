@@ -4,8 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "proxy": "https://flow-node-api.onrender.com",
-  "homepage":"http://cejimenez0123.github.io/flow-work",
-
+  "homepage": "http://cejimenez0123.github.io/flow-work",
   "scripts": {
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
@@ -22,6 +21,7 @@
     "@prisma/client": "^5.9.1",
     "axios": "^1.6.7",
     "dotenv": "^16.4.4",
+    "gh-pages": "^6.1.1",
     "mongodb": "^6.3.0",
     "passport": "^0.7.0",
     "prisma": "^5.9.1",
@@ -37,7 +37,6 @@
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
-    "gh-pages": "^6.1.1",
     "vite": "^5.1.0"
   }
 }
