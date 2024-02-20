@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from "react"
+import { useEffect, useLayoutEffect, useState } from "react"
 import axios from "axios"
 import Enviroment from "../core"
 import useSWR from 'swr'
@@ -10,29 +10,35 @@ const fetcher = (url, token) =>axios.get(url, { headers: { Authorization: "Beare
 
 function Fork({root}){
     const [choice,setChoice]=useState(null)
+    const [choices,setChoices]=useState([])
     const [plus,setPlus]=useState(false)
     const [task,setTask]=useState("")
     const [url,setUrl]=useState((Enviroment.BASE_URL+`/fork/children/${root.id??"65ce6f093ed66e8a5da96c07"}`))
     const [taskName,setTaskName]=useState("")
-    
+    const [initial,setInitial]=useState(true)
     useLayoutEffect(()=>{
             if(root){
                 setTaskName(capitalizedWord(root.name))
                 changeUrl(root)
             }
+            setInitial(false)
     },[])
 
     const changeUrl =(root)=>{
-    if(root.id!="65ce6f093ed66e8a5da96c07"){
-        if(!root.userId!==Enviroment.ADMIN_UID){
+  
+        if(root.userId!==Enviroment.ADMIN_UID || Enviroment.root_array.includes(root.id)){
             setUrl(Enviroment.BASE_URL+`/fork/protected/children/${root.id}`)
         }else{
             setUrl(Enviroment.BASE_URL+`/fork/children/${root.id??"65ce6f093ed66e8a5da96c07"}`)
         }
-    }}
+    }
   
     const { data,error,isLoading } = useSWR([url,localStorage.getItem("token")??""], ([url, token]) => fetcher(url,token))
-    
+    useEffect(()=>{
+        if(data && data.length>0){
+        setChoices(data)
+        }
+    },[data])
     
     const handleChoice = (forkItem)=>{
         setChoice(forkItem)
@@ -43,26 +49,30 @@ function Fork({root}){
     }
     const createTask = ()=>{
         let token = localStorage.getItem("token")
+       
+        if(token){
+       
         axios.post(Enviroment.BASE_URL + '/fork/',{
-            fork:root,
-            task:task,
+            parentFork:root,
+            task:task.toLowerCase(),
             },
        {headers: {
             Authorization: 'Bearer ' + token
        }}).then(
             response=>{
-               console.log(response)
+            setChoices(prevState=>[response.data,...prevState])
+             
             }
         ).catch(error=>{
-            if(error.response && error.response.data.includes("jwt expired")){
-                localStorage.setItem("token",null)
-            }else{
-                console.error(error)
-            }
+       
 
         })
+    }else{
+        window.alert("No Token")
+    }
     }
     const handleChange = (e)=>{
+        e.preventDefault()
         setTask(e.currentTarget.value)
     }
     if(error){
@@ -75,16 +85,16 @@ function Fork({root}){
         return(<div>Error:{error.message}</div>)
     }
     if(url.length<1||isLoading){
-        return(<div><div className="loading">Loading...</div></div>)
+        return(<div><div className="loading"><Skeleton width={"100%"} height={"100%"}/></div></div>)
     }
 
     const Choices = ()=>{
        
-        if(data.length>0){
+        if(choices.length>0){
         return(
     <div  
     ><ul className={`choices`}>
-    {data.map(node=>{
+    {choices.map(node=>{
         let choice= new ForkControl(    node.id,
                                         node.name,
                                         node.dueDate,
@@ -92,8 +102,8 @@ function Fork({root}){
                                         node.userId,
                                         node.parentId,
                                         [])
-        return <Choice choice={choice} handleChoice={(chosen)=>handleChoice(chosen)}/>
-    })}</ul></div>)}else if(data.length==0){
+        return <Choice key={node.id}choice={choice} handleChoice={(chosen)=>handleChoice(chosen)}/>
+    })}</ul></div>)}else if(choices.length==0){
         return(<div className="best-self">
             <h3>Go be your best self</h3>
                 <h3>OR</h3>
@@ -115,28 +125,7 @@ const TaskName=()=>{
                     Do you want to {taskName}:______?
                 </h6>
 }
-const CreateInputs = ()=>{
-    
-        if(root && root.userId !== Enviroment.ADMIN_UID && localStorage.getItem("token")){
-                return plus ?
-        <div className="create">
-            <input  value={task} 
-                    className="name"
-                    onChange={(e)=>handleChange(e)}
-                    type="text"/>
-                <button className="create--input" onClick={createTask}
-                    >Create
-                    </button>
-                </div>:<button className="create--button" onClick={handlePlus}>+</button>
-            }else{
-                if(!Boolean(localStorage.getItem("token"))){
-                return<div>
-                    <button className="create--button disabled"disabled>+</button>
-                </div>
-                }
-            }
-            return <div></div>
-        }
+
     
            
         
@@ -147,23 +136,46 @@ const CreateInputs = ()=>{
 
 
 
-const ForkDiv = ()=><div className="render" >
-<div >
-<div >
-<TaskName/>
-</div>
-</div>
-<div  >
-<Choices/>
-</div>
-<CreateInputs/>
-</div>
+
    return(<div className="fork">
        {choice? 
        <div >
             <Fork root={choice}/>
         </div>:
-            <ForkDiv/>
+            <div >
+            <div >
+            <div className={initial?"render":""}  >
+            <TaskName/>
+            </div>
+            </div>
+            <div className={initial?"render":""}  >
+            <Choices/>
+            </div>
+            {  root 
+        && choices.length == 0 &&
+        localStorage.getItem("token")?
+               plus ?
+        <div className="create">
+            <input  value={task} 
+                    className="name"
+                    onChange={(e)=>handleChange(e)}
+                    type="text"/>
+                <button className="create--input" onClick={createTask}
+                    >Create
+                    </button>
+                </div>:<button className="create--button" onClick={handlePlus}>+</button>
+           :
+            root.userId !== Enviroment.ADMIN_UID || choices.length==0?
+                <div className="create--disabled">
+                    <button className="create--button disabled"disabled>+</button>
+                    <div className="disabled--div">
+                    <h3 className="disabled--text">Sign In to Add Task</h3>
+                    </div>
+                </div>:<div></div>
+             
+            }
+            {/* <CreateInputs/> */}
+            </div>
         }
    </div>)
 

@@ -1,34 +1,34 @@
 
 import {Dialog} from "@mui/material"
 import Enviroment from "../core"
-import { useState , useEffect} from "react"
+import { useState ,useLayoutEffect, useEffect} from "react"
 import axios from "axios"
 const login = "login"
 const signUp = "signup"
 export default function Header(props){
     const [auth,setAuth] = useState(null)
     const [authentication,setAuthentication] = useState(null)
-    useEffect(()=>{
-        let token = localStorage.getItem("token")
-        let tokenTimestamp = JSON.parse(localStorage.getItem("tokenTimestamp"))
-        const currentTimestamp = Date.now();
-        const threeHoursAgo = currentTimestamp - (3 * 60 * 60 * 1000);
-        if (tokenTimestamp > threeHoursAgo) {
+    // useEffect(()=>{
+    //     let token = localStorage.getItem("token")
+    //     let tokenTimestamp = JSON.parse(localStorage.getItem("tokenTimestamp"))
+    //     const currentTimestamp = Date.now();
+    //     const threeHoursAgo = currentTimestamp - (3 * 60 * 60 * 1000);
+    //     if (tokenTimestamp > threeHoursAgo) {
     
-        if(token){
+    //     if(token){
           
-          setAuth(token)
-          setAuthentication(null)
-        }else{
-          setAuth(null)
-          setAuthentication(null)
-        }
-            }else{
-          setAuth(null)
-          setAuthentication(null)
-        }
+    //       setAuth(token)
+    //       setAuthentication(null)
+    //     }else{
+    //       setAuth(null)
+    //       setAuthentication(null)
+    //     }
+    //         }else{
+    //       setAuth(null)
+    //       setAuthentication(null)
+    //     }
        
-      },[])
+    //   },[])
       const onLogin = (e)=>{
         e.preventDefault()
         const body = {email: e.target.email.value,
@@ -38,10 +38,29 @@ export default function Header(props){
             const {token}=data
             setAuth(token)
             setAuthentication(null)
-       
-          localStorage.setItem("tokenTimestamp",JSON.stringify( Date.now()));
+            localStorage.setItem("tokenTimestamp",JSON.stringify( Date.now()));
             localStorage.setItem('token',token)
           })
+      }
+      const checkAuth=()=>{
+        const token =localStorage.getItem('token')
+        if(token){
+          axios.get(Enviroment.BASE_URL+"/auth/", { 
+            headers: 
+              { Authorization: "Bearer " + token,
+             AccessControlAllowOrigin: '*'}
+            }).then(res=>{
+            if(res.status==200){
+              setAuth(token)
+              setAuthentication(null)
+            }
+             if(res.status==401){
+              localStorage.setItem('token',null)
+              setAuth(null)
+              setAuthentication(null)
+             }
+          })
+        }
       }
       const onSignUp = (e)=>{
         e.preventDefault()
@@ -54,11 +73,22 @@ export default function Header(props){
           const {token}=data
           setAuth(token)
           setAuthentication(null)
-          localStorage.setItem("tokenTimestamp",JSON.stringify( Date.now()));
+          localStorage.setItem("tokenTimestamp",JSON.stringify(Date.now()));
           localStorage.setItem('token',token)
     
         })
       }
+      
+      const onLogOut = (e)=>{
+        localStorage.setItem("token",null)
+        localStorage.setItem("tokenTimestamp",null);
+        setAuth(null)
+
+      }
+  
+      useLayoutEffect(()=>{
+        checkAuth()
+      },[])
       const authenticating = ()=>{
         switch(authentication){
           case login :{
@@ -86,10 +116,10 @@ export default function Header(props){
       }
     return(<header>
         <h2 className="Logo">FlowTree</h2>
-        {auth?<div></div>:<div className="auth--buttons"><button className="auth--button"onClick={()=>setAuthentication(signUp)}>Sign Up</button>
+        {auth?<div className="auth--buttons" ><button onClick={onLogOut} className="auth--button">Log Out</button></div>:<div className="auth--buttons"><button className="auth--button"onClick={()=>setAuthentication(signUp)}>Sign Up</button>
      <button className="auth--button"onClick={()=>setAuthentication(login)}>Log In</button></div>
      }  
-    <Dialog onClose={()=>{setAuthentication(null)}} open={Boolean(authentication)}>
+    <Dialog style={{height:"fit-content"}}onClose={()=>{setAuthentication(null)}} open={Boolean(authentication)}>
      {authenticating()}
      </Dialog>
 

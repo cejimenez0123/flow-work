@@ -22,7 +22,8 @@ export default function Choice({choice,handleChoice}){
             <div><Checkbox checked={checked} onClick={()=>setChecked(!checked)}/></div>
     }
     return(<li key={fork.id} className="choice">
-    <button style={{backgroundColor:checked?"#354850":"#3784A5"}} onClick={()=>handleChoice(choice)}>{fork.name}</button>
-    <CheckedInputs/>
+    <button style={{backgroundColor:checked?"#354850":"#3784A5"}}
+     onClick={()=>handleChoice(choice)}>{fork.name}</button>
+    {/* <CheckedInputs/> */}
 </li> )
 }

@@ -20,16 +20,8 @@ function App() {
   const startOver = ()=>{
       setStart(false)
     } 
-  useLayoutEffect(()=>{
-    checkAuth()
-  },[])
-  const checkAuth=()=>{
-    axios.get(Enviroment.BASE_URL+"/auth/").then(res=>{
-        if(res.response.status == 401){
-          localStorage.setItem("token",null)
-        }
-    })
-  }
+ 
+
   const ForkDiv =()=>{
     if(isLoading){
       return<div>
