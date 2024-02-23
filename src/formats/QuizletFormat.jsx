@@ -18,7 +18,8 @@ function QuizletFormat(props){
       } 
       const ForkDiv =(props)=>{
         if(isLoading){
-          return<div>
+          return<div className="loading">
+
             Loading...
           </div>
         }

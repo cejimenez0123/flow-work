@@ -50,7 +50,7 @@ export default function TreeFormat(props){
   {greetings[index]}
       
       </h2>
-      <button onClick={()=>next()}>
+      <button className="button--next" onClick={()=>next()}>
       Next
         </button>
       </div>

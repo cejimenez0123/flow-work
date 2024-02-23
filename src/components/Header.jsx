@@ -1,16 +1,12 @@
 
-import {Dialog, Menu,MenuItem} from "@mui/material"
+import {Dialog, Menu,IconButton,Box,useMediaQuery,MenuItem,AppBar,Toolbar,Typography,Button} from "@mui/material"
 import Enviroment from "../core"
+import ClearIcon from '@mui/icons-material/Clear';
 import { useState ,useLayoutEffect,useContext} from "react"
 import axios from "axios"
 import MyContext from "../context"
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
+
+
 const login = "login"
 const signUp = "signup"
 export default function Header(props){
@@ -19,7 +15,7 @@ export default function Header(props){
     const [authentication,setAuthentication] = useState(null)
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
-
+    const smallScreen = useMediaQuery('(max-width:900px)');
     const handleClose = () => {
       setAnchorEl(null);
     };
@@ -115,18 +111,19 @@ export default function Header(props){
         return <div></div>
       }  }
       }
-      const handleCloseNavMenu = ()=>{
-        setAnchorEl(null)
-      }
+      const hideDialog =()=>setAuthentication(null)
+ 
       return(
-        <Box sx={{ flexGrow: 1 }}>
+       
+         <Box sx={{ flexGrow: 1 }}>
         <AppBar style={{backgroundColor:"#3D687A"}} position="static">
           <Toolbar>
            
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               FlowTree
             </Typography>
-            {auth?<Button      color="inherit">Log Out</Button>:<div><Button
+            {auth?<Button onClick={()=>{onLogOut()}} color="inherit">Log Out</Button>:<div>
+              <Button
                             
                             
                             aria-haspopup="true"
@@ -160,8 +157,13 @@ export default function Header(props){
         </Button>:<Button color="inherit"onClick={()=>setFormat(!format)}>Tree Format</Button>}
           </Toolbar>
         </AppBar>
-        <Dialog style={{height:"fit-content"}}onClose={()=>{setAuthentication(null)}} open={Boolean(authentication)}>
-     {authenticating()}
+        <Dialog  fullScreen={smallScreen?true:false} onClose={()=>hideDialog()} open={Boolean(authentication)}>
+      <div>
+        <IconButton onClick={()=>hideDialog()}>
+          <ClearIcon/>
+        </IconButton>
+      </div>
+      {authenticating()}
      </Dialog>
       </Box>
       )

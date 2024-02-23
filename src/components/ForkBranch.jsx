@@ -2,15 +2,19 @@
 import useForkChildren from "../hooks/useForkChildren"
 import {useState } from 'react';
 import Enviroment from "../core"
+import {Dialog,Skeleton,useMediaQuery,IconButton} from "@mui/material"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ForkControl from "../data/ForkControl";
 import AddIcon from "@mui/icons-material/Add"
 import CreateTaskForm from "./CreateTaskForm";
-import {Dialog,Skeleton} from "@mui/material"
+import ClearIcon from "@mui/icons-material/Clear"
 function ForkBranch({fork,defaultOpen}){
     const [active,setActive]=useState(defaultOpen?defaultOpen:false)
     const [open,setOpen]=useState(false)
+    const smallScreen = useMediaQuery('(max-width:900px)');
+    const token = localStorage.getItem('token')
+    const loggedIn =token!==null && token!=="null"
     const {choices,error,isLoading}= useForkChildren({fork})
     if(isLoading){
         return(<div><Skeleton width={""}/></div>)
@@ -55,11 +59,24 @@ function ForkBranch({fork,defaultOpen}){
                 return <ForkBranch fork={choice}/>
             })}
             {(fork.parentId===Enviroment.ADMIN_UID || Enviroment.root_array.includes(fork.id))?
-            <li className='fork--branch'>
-               <p className="branch--text add">Add Task</p> <span   onClick={openDialog}
+            <li onClick={()=>{
+
+              if(loggedIn){
+                openDialog()
+              }else[
+                window.alert("Please Log In")
+              ]
+            }} className='fork--branch'>
+              {loggedIn?<p  className="branch--text add">Add Task</p>:
+                        <p  className="branch--text add">Sign Up to add task</p>} <span   
                         className='branch--add'><AddIcon/></span></li>:null}
         </ul>:null}
-        <Dialog open={open} onClose={()=>closeDialog()}>
+        <Dialog fullScreen={smallScreen?true:false}  open={open} onClose={closeDialog}>
+            <div>
+              <IconButton onClick={closeDialog}>
+              <ClearIcon/>
+              </IconButton>
+            </div>
           <CreateTaskForm/>
         </Dialog>
     </div>

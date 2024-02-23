@@ -75,6 +75,13 @@ button{
   min-width: 30em;
   min-height: 20em;
 }
+.create--div button{
+  margin-top: 1em;
+  padding: 1em;
+  font-size: 1.2em;
+  background-color: var(--color-d);
+  color:white
+}
   .create--form{
     padding: 3em 2em;
     display: flex;
@@ -104,6 +111,10 @@ button{
 .auth{
   padding: 5em 1.5em 2em 1.5em;
   
+}
+.auth button{
+  color:white;
+  background-color: var(--color-d);
 }
 
 
@@ -251,6 +262,12 @@ header .auth--buttons{
   min-height:5rem;
   color: var(--color-d);
   
+}
+.button--next{
+  color:#ffffff;
+  background-color: var(--color-d);
+  font-size: 1.3em;
+  padding: 0.8em 1.6em;
 }
 .create--button.disabled{
   background-color: transparent;

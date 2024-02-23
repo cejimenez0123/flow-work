@@ -3,18 +3,17 @@ import axios from "axios"
 import Enviroment from "../core"
 import useSWR from 'swr'
 import ForkControl from "../data/ForkControl";
-import {Skeleton,Dialog} from "@mui/material"
+import {Skeleton,Dialog,IconButton,useMediaQuery} from "@mui/material"
 import Choice from "./Choice";
 import CreateTaskForm from "./CreateTaskForm";
-
+import ClearIcon from '@mui/icons-material/Clear';
 const fetcher = (url, token) =>axios.get(url, { headers: { Authorization: "Bearer " + token } })
   .then((res) => res.data);
 
 export default function Fork({root}){
     const [choice,setChoice]=useState(null)
     const [choices,setChoices]=useState([])
-    const [plus,setPlus]=useState(false)
-    const [task,setTask]=useState("")
+    const smallScreen = useMediaQuery('(max-width:900px)');
     const [openDialog,setOpenDialog]=useState(false)
     const loggedIn = localStorage.getItem("token")!==null && localStorage.getItem("token")!=="null"
     const [url,setUrl]=useState((Enviroment.BASE_URL+`/fork/children/${root.id??"65ce6f093ed66e8a5da96c07"}`))
@@ -89,30 +88,6 @@ export default function Fork({root}){
                         {phraseAsQuestion(taskName)}
                     </h6>
     }
-    const createTask = ()=>{
-        let token = localStorage.getItem("token")
-       
-        if(token){
-     
-        axios.post(Enviroment.BASE_URL + '/fork/',{
-            parentFork:root,
-            task:task.toLowerCase(),
-            },
-       {headers: {
-            Authorization: 'Bearer ' + token
-       }}).then(
-            response=>{
-            setChoices(prevState=>[response.data,...prevState])
-             
-            }
-        ).catch(error=>{
-       
-
-        })
-    }else{
-        window.alert("No Token")
-    }
-    }
  
     const showDialog =()=>{
         setOpenDialog(true)
@@ -171,7 +146,12 @@ export default function Fork({root}){
             <AddButton/>
             </div>
  
-            <Dialog open={openDialog} onClose={hideDialog}>
+            <Dialog fullScreen={smallScreen?true:false}open={openDialog} onClose={hideDialog}>
+                <div>
+                    <IconButton onClick={hideDialog}>
+                        <ClearIcon/>
+                    </IconButton>
+                </div>
                 <CreateTaskForm/>
             </Dialog>
             </div>
