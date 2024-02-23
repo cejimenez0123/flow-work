@@ -6,6 +6,9 @@
      
     
     }
+    .bottom{
+        margin-top: 1em;
+    }
     #tree{
    
         overflow: hidden;
@@ -14,5 +17,16 @@
         margin: 0;
         height: 100%;
     }
-   
+    .create--div{
+    width: 100%;
+    min-width: 22em;
+    min-height: 20em;
+      }
+        .create--form{
+          padding: 3em 2em;
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-start;
+          min-height: 10em;
+        }
   }

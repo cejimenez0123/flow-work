@@ -1,15 +1,28 @@
 
-import {Dialog} from "@mui/material"
+import {Dialog, Menu,MenuItem} from "@mui/material"
 import Enviroment from "../core"
 import { useState ,useLayoutEffect,useContext} from "react"
 import axios from "axios"
 import MyContext from "../context"
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
 const login = "login"
 const signUp = "signup"
 export default function Header(props){
     const [auth,setAuth] = useState(null)
     const {format,setFormat}=useContext(MyContext)
     const [authentication,setAuthentication] = useState(null)
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+
+    const handleClose = () => {
+      setAnchorEl(null);
+    };
       const onLogin = (e)=>{
         e.preventDefault()
         const body = {email: e.target.email.value,
@@ -71,10 +84,12 @@ export default function Header(props){
         setAuth(null)
 
       }
-  
       useLayoutEffect(()=>{
         checkAuth()
       },[])
+      const handleOpenNavMenu = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
       const authenticating = ()=>{
         switch(authentication){
           case login :{
@@ -100,18 +115,54 @@ export default function Header(props){
         return <div></div>
       }  }
       }
-    return(<header>
-        <h2 className="Logo">FlowTree</h2>
-       {format? <button onClick={()=>setFormat(!format)}>
-          Quizlet
-        </button>:<button onClick={()=>setFormat(!format)}>Tree</button>}
-        {auth?<div className="auth--buttons" ><button onClick={onLogOut} className="auth--button">Log Out</button></div>:<div className="auth--buttons"><button className="auth--button"onClick={()=>setAuthentication(signUp)}>Sign Up</button>
-     <button className="auth--button"
-     onClick={()=>setAuthentication(login)}>Log In</button></div>
-     }  
-    <Dialog style={{height:"fit-content"}}onClose={()=>{setAuthentication(null)}} open={Boolean(authentication)}>
+      const handleCloseNavMenu = ()=>{
+        setAnchorEl(null)
+      }
+      return(
+        <Box sx={{ flexGrow: 1 }}>
+        <AppBar style={{backgroundColor:"#3D687A"}} position="static">
+          <Toolbar>
+           
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              FlowTree
+            </Typography>
+            {auth?<Button      color="inherit">Log Out</Button>:<div><Button
+                            
+                            
+                            aria-haspopup="true"
+                            onClick={(e)=>handleOpenNavMenu(e)}
+                            color="inherit"
+                        >
+                Log In
+              </Button>
+              <Menu
+        id="demo-positioned-menu"
+        aria-labelledby="demo-positioned-button"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+      >
+        <MenuItem onClick={()=>setAuthentication(signUp)}>Sign Up</MenuItem>
+        <MenuItem onClick={()=>setAuthentication(login)}>Log In</MenuItem>
+  
+      </Menu></div>}
+          
+            {format? <Button color="inherit"onClick={()=>setFormat(!format)}>
+          Quizlet Format
+        </Button>:<Button color="inherit"onClick={()=>setFormat(!format)}>Tree Format</Button>}
+          </Toolbar>
+        </AppBar>
+        <Dialog style={{height:"fit-content"}}onClose={()=>{setAuthentication(null)}} open={Boolean(authentication)}>
      {authenticating()}
      </Dialog>
-
-    </header>)
+      </Box>
+      )
 }

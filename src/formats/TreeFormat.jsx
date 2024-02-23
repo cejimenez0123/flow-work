@@ -11,7 +11,8 @@ const fetcher = (url) =>axios.get(url)
 export default function TreeFormat(props){
     const {data,error,isLoading}= useSWR(Enviroment.BASE_URL+"/fork/",fetcher)
     const token = localStorage.getItem("token")
-    const [index,setIndex]=useState(token!==null||token!=="null"?0:3)
+    const loggedIn = token!==null && token!=="null"
+    const [index,setIndex]=useState(loggedIn?0:3)
   
     if(isLoading){
       return(<div>Loading...</div>)
@@ -43,7 +44,7 @@ export default function TreeFormat(props){
       <div className='tree--format' >
       <div className='top'>
    
-      <div className='greetings'>
+      {!loggedIn?<div className='greetings'>
         {index==3?<h4>Mindfulness</h4>:null}
       <h2>
   {greetings[index]}
@@ -53,6 +54,7 @@ export default function TreeFormat(props){
       Next
         </button>
       </div>
+      :<div></div>}
       </div>
       <div className='bottom'>
     <ul id="tree" >

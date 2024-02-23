@@ -19,28 +19,28 @@ function CreateTaskForm({parentFork}){
     const createTask = ()=>{
 console.log(date["$d"])
 console.log(name)
-    //     let token = localStorage.getItem("token")
        
-    //     if(token){
+       
+        if(token){
      
-    //     axios.post(Enviroment.BASE_URL + '/fork/',{
-    //         parentFork:root,
-    //         task:task.toLowerCase(),
-    //         },
-    //    {headers: {
-    //         Authorization: 'Bearer ' + token
-    //    }}).then(
-    //         response=>{
-    //         setChoices(prevState=>[response.data,...prevState])
+        axios.post(Enviroment.BASE_URL + '/fork/',{
+            parentFork:root,
+            task:task.toLowerCase(),
+            },
+       {headers: {
+            Authorization: 'Bearer ' + token
+       }}).then(
+            response=>{
+            setChoices(prevState=>[response.data,...prevState])
              
-    //         }
-    //     ).catch(error=>{
+            }
+        ).catch(error=>{
        
 
-    //     })
-    // }else{
-    //     window.alert("No Token")
-    // }
+        })
+    }else{
+        window.alert("No Token")
+    }
     }
     return(<div className='create--div'>
             <FormGroup className='create--form'>
