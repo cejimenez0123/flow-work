@@ -1,0 +1,18 @@
+
+
+@media (max-width:900px) {
+    main{
+      margin: auto;
+     
+    
+    }
+    #tree{
+   
+        overflow: hidden;
+        /* border: 2px solid var(--color-c); */
+        padding: 1em 0em 0em 1em;
+        margin: 0;
+        height: 100%;
+    }
+   
+  }

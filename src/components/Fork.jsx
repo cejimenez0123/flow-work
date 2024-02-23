@@ -3,23 +3,26 @@ import axios from "axios"
 import Enviroment from "../core"
 import useSWR from 'swr'
 import ForkControl from "../data/ForkControl";
-import {Skeleton} from "@mui/material"
+import {Skeleton,Dialog} from "@mui/material"
 import Choice from "./Choice";
+import CreateTaskForm from "./CreateTaskForm";
+
 const fetcher = (url, token) =>axios.get(url, { headers: { Authorization: "Bearer " + token } })
   .then((res) => res.data);
 
-function Fork({root}){
+export default function Fork({root}){
     const [choice,setChoice]=useState(null)
     const [choices,setChoices]=useState([])
     const [plus,setPlus]=useState(false)
     const [task,setTask]=useState("")
+    const [openDialog,setOpenDialog]=useState(false)
+    const loggedIn = localStorage.getItem("token")!==null && localStorage.getItem("token")!=="null"
     const [url,setUrl]=useState((Enviroment.BASE_URL+`/fork/children/${root.id??"65ce6f093ed66e8a5da96c07"}`))
     const [taskName,setTaskName]=useState("")
-    const [auth,setAuth]=useState(null)
     const [initial,setInitial]=useState(true)
     useLayoutEffect(()=>{
             if(root){
-                setTaskName(capitalizedWord(root.name))
+                setTaskName(root.name)
                 changeUrl(root)
             }
             setInitial(false)
@@ -29,14 +32,14 @@ function Fork({root}){
         if(localStorage.getItem("token")!=="null" && localStorage.getItem("token")!==null && 
         ((root.userId !== Enviroment.ADMIN_UID && !Enviroment.root_array.includes(root.id)
             ))){
-            setAuth(false)
+            
             setUrl(Enviroment.BASE_URL+`/fork/protected/children/${root.id}`)
         }else{
-            setAuth(true)
+          
             setUrl(Enviroment.BASE_URL+`/fork/children/${root.id??"65ce6f093ed66e8a5da96c07"}`)
         }
     }
-  
+
     const { data,error,isLoading } = useSWR([url,localStorage.getItem("token")??""], ([url, token]) => fetcher(url,token))
     useEffect(()=>{
         if(data && data.length>0){
@@ -56,7 +59,7 @@ function Fork({root}){
         if(choices.length>0){
         return(
     <div  
-    ><ul className={`choices`}>
+    ><ul >
     {choices.map(node=>{
         let choice= new ForkControl(    node.id,
                                         node.name,
@@ -83,7 +86,7 @@ function Fork({root}){
 }
     const TaskName=()=>{
         return<h6 className="task">
-                        Do you want to {taskName}:______?
+                        {phraseAsQuestion(taskName)}
                     </h6>
     }
     const createTask = ()=>{
@@ -110,9 +113,12 @@ function Fork({root}){
         window.alert("No Token")
     }
     }
-    const handleChange = (e)=>{
-        e.preventDefault()
-        setTask(e.currentTarget.value)
+ 
+    const showDialog =()=>{
+        setOpenDialog(true)
+    }
+    const hideDialog =()=>{
+        setOpenDialog(false)
     }
     if(error){
      
@@ -128,62 +134,65 @@ function Fork({root}){
         return(<div><div className="loading"><Skeleton width={"100%"} height={"100%"}/></div></div>)
     }
 
-    
+    const AddButton =()=>{
+    if(root && ((root.userId !== Enviroment.ADMIN_UID)||(loggedIn ))){
+           return <div className="button--div"><button className="create--button" onClick={showDialog}>+</button></div>
+        }else{
+       if(root.userId!==Enviroment.ADMIN_UID||Enviroment.root_array.includes(root.id)){
+            return<div className="create--disabled">
+                <button className="create--button disabled"disabled>+</button>
+                <div className="disabled--div">
+                <h3 className="disabled--text">Sign In to Add Task</h3>
+                </div>
+            </div>}else{return null
+            
+        }
+    } 
+        }
 
 
 
 
-   return(<div className="fork">
+   return(<div >
        {choice? 
        <div >
             <Fork root={choice}/>
         </div>:
             <div >
-            <div >
+            <div className="top" >
             <div className={initial?"render":""}  >
             <TaskName/>
             </div>
             </div>
-            <div className={initial?"render":""}  >
+            <div className="bottom">
+            <div className={"choices "+initial?"render":""}  >
             <Choices/>
             </div>
-            {(root && 
-            ((root.userId !== Enviroment.ADMIN_UID)||
-            (localStorage.getItem("token")!=="null" && Enviroment.root_array.includes(root.id))))?
-                
-               plus ?
-        <div className="create">
-            <input  value={task} 
-                    className="name"
-                    onChange={(e)=>handleChange(e)}
-                    type="text"/>
-                <button className="create--input" onClick={createTask}
-                    >Create
-                    </button>
-                </div>:<button className="create--button" onClick={handlePlus}>+</button>
-           :
-           (root.userId!==Enviroment.ADMIN_UID||Enviroment.root_array.includes(root.id))?
-                <div className="create--disabled">
-                    <button className="create--button disabled"disabled>+</button>
-                    <div className="disabled--div">
-                    <h3 className="disabled--text">Sign In to Add Task</h3>
-                    </div>
-                </div>:<div></div>
-             
-            }
+            <AddButton/>
+            </div>
+ 
+            <Dialog open={openDialog} onClose={hideDialog}>
+                <CreateTaskForm/>
+            </Dialog>
             </div>
         }
    </div>)
 
 }
-function capitalizedWord(word){
-const firstLetter = word.charAt(0)
 
-const firstLetterCap = firstLetter.toUpperCase()
+function phraseAsQuestion(task){
+    const array = ["focus"]
+    const phrase = ["high","low"]
+    const verbs = ["read"]
+    if(array.includes(task.toLowerCase())){
+        return `What level of ${task} energy do you want to use?`
+    }else if(phrase.includes(task.toLowerCase)){
+        return `What do you want to use your ${task} energy on?`
+    }else if(verbs.includes(task.toLowerCase())){
+        return `What kind of ${task}ing do you want to do?`
+    }else{
+        return `What form of ${task} do you want to do?`
+    }
 
-const remainingLetters = word.slice(1)
 
-const capitalizedWord = firstLetterCap + remainingLetters
-return capitalizedWord
 }
-export default Fork

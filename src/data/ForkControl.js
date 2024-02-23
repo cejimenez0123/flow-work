@@ -1,7 +1,7 @@
 
 
 
-class ForkControl{
+export default class ForkControl{
    id
    name
    dueDate
@@ -20,4 +20,3 @@ class ForkControl{
    }
 }
 
-export default ForkControl
