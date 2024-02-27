@@ -23,7 +23,7 @@ export default function TreeFormat(props){
     const greetings = ["Hi! Heard you want to be productive?",
     "Not sure where to start?",
     "Check in with yourself, everything requires focus...",
-    "Do you want to be use high energy focus or low energy focus?"]
+    "Ask yourself, what is the intensity of foucs you want to use low or high? Then we can flow"]
     const next= ()=>{
       setIndex(prevState=>{
        let state=  prevState+1
@@ -38,8 +38,8 @@ export default function TreeFormat(props){
     }
    
   if(data){
-    const {id,name,dueDate,parentId,completed,userId} = data
-    const fork = new ForkControl(id,name,dueDate,completed,userId,parentId,[])
+    const {id,name,description,dueDate,parentId,completed,userId} = data
+    const fork = new ForkControl(id,name,description,dueDate,completed,userId,parentId,[])
     return(
       <div className='tree--format' >
       <div className='top'>

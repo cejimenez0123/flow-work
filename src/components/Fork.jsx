@@ -45,14 +45,13 @@ export default function Fork({root}){
         setChoices(data)
         }
     },[data])
-    
+    const addChoice =(data)=>{
+        setChoices(prevState=>[data,...prevState])
+    }
     const handleChoice = (forkItem)=>{
         setChoice(forkItem)
     }
   
-    const handlePlus = ()=>{
-        setPlus(true)
-    }
     const Choices = ()=>{
        
         if(choices.length>0){
@@ -62,6 +61,7 @@ export default function Fork({root}){
     {choices.map(node=>{
         let choice= new ForkControl(    node.id,
                                         node.name,
+                                        node.description,
                                         node.dueDate,
                                         node.completed,
                                         node.userId,
@@ -111,11 +111,11 @@ export default function Fork({root}){
 
     const AddButton =()=>{
     if(root && ((root.userId !== Enviroment.ADMIN_UID)||(loggedIn ))){
-           return <div className="button--div"><button className="create--button" onClick={showDialog}>+</button></div>
+           return <div className="button--div"><button className="add--button" onClick={showDialog}>+</button></div>
         }else{
        if(root.userId!==Enviroment.ADMIN_UID||Enviroment.root_array.includes(root.id)){
             return<div className="create--disabled">
-                <button className="create--button disabled"disabled>+</button>
+                <button className="add--button disabled"disabled>+</button>
                 <div className="disabled--div">
                 <h3 className="disabled--text">Sign In to Add Task</h3>
                 </div>
@@ -152,7 +152,7 @@ export default function Fork({root}){
                         <ClearIcon/>
                     </IconButton>
                 </div>
-                <CreateTaskForm/>
+                <CreateTaskForm parentFork={root} handleNew={(data)=>addChoice(data)}/>
             </Dialog>
             </div>
         }

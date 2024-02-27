@@ -5,7 +5,9 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
-function CreateTaskForm({parentFork}){
+import axios from 'axios';
+import Enviroment from '../core';
+function CreateTaskForm({parentFork,handleNew}){
     const token = localStorage.getItem("token")
     const loggedIn = token!==null&&token!=="null"
     const [name,setName]=useState("")
@@ -19,20 +21,23 @@ function CreateTaskForm({parentFork}){
         if(loggedIn){
      
         axios.post(Enviroment.BASE_URL + '/fork/',{
-            parentFork:root,
-            task:task.toLowerCase(),
-            dueDate: date["$d"]
+            parentFork:parentFork,
+            task:name.toLowerCase(),
+            dueDate: dueDate?date["$d"]:null,
             },
        {headers: {
             Authorization: 'Bearer ' + token
        }}).then(
             response=>{
-            setChoices(prevState=>[response.data,...prevState])
+                if(response.data){
+                    console.log(response.data)
+                    handleNew(response.data);
+                }
              
             }
         ).catch(error=>{
        
-
+            console.error(error)
         })
     }else{
         window.alert("No Token")
@@ -44,12 +49,13 @@ function CreateTaskForm({parentFork}){
                 <TextField label="Name" value={name} onChange={(e)=>handleName(e)}/>
                 <label>Is there a due date<Checkbox checked={dueDate} onClick={()=>setDueDate(!dueDate)} /></label>
                 {dueDate?
+                <div className='date--picker'>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker  value={date}
   onChange={(newValue) => setDate(newValue)}/>
-                </LocalizationProvider>:null
-                }
-                <button onClick={()=>createTask()}>Create</button>
+                </LocalizationProvider> </div>:null
+               }
+                <button className="create--button"onClick={()=>createTask()}>Create</button>
             </FormGroup>
     </div>)
 }

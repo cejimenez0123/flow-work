@@ -10,8 +10,8 @@ import MyContext from "../context"
 const login = "login"
 const signUp = "signup"
 export default function Header(props){
-    const [auth,setAuth] = useState(null)
-    const {format,setFormat}=useContext(MyContext)
+   
+    const {format,setFormat,auth,setAuth}=useContext(MyContext)
     const [authentication,setAuthentication] = useState(null)
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -28,6 +28,7 @@ export default function Header(props){
             const {token}=data
             setAuth(token)
             setAuthentication(null)
+            window.location.reload()
             localStorage.setItem("tokenTimestamp",JSON.stringify( Date.now()));
             localStorage.setItem('token',token)
           })
@@ -47,13 +48,17 @@ export default function Header(props){
               setAuth(token)
               setAuthentication(null)
             }
-           
-          }).catch(err=>{
-          if(err.response.status==401){
+            console.log(res)
+            if(res.status==401){
               localStorage.setItem('token',null)
               setAuth(null)
               setAuthentication(null)}
-          }
+          }).catch(err=>{
+          
+              localStorage.setItem('token',null)
+              setAuth(null)
+              setAuthentication(null)}
+       
           )
         }
       }

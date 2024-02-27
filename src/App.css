@@ -15,14 +15,15 @@
 .bottom{
   background-color: var(--color-d);
   padding: 1em 0em 2em 0em;
-  height: 100vmax;
+  height: 100%;
+  width: 100%;
   margin: 0;
 }
 
 
 button{
   padding:1em;
-  background-color: var(--color-e);
+  /* background-color: var(--color-e); */
   color:white;
   border-radius: 8px;
   border-color: transparent;
@@ -92,6 +93,13 @@ button{
 }
 .tree--format .top{
   align-items: center;
+}
+.tree--format{
+  height: 100%;
+  width: 100%;
+}
+.tree--format .bottom{
+  overflow: scroll;
 }
 .main--buttons{
   margin: auto;
@@ -239,10 +247,10 @@ header .auth--buttons{
   max-width: 30em;
   margin: auto;
 }
-.button--div .create--button{
+.button--div .add--button{
   margin-left: 2em;
 }
-.create--button{
+.add--button{
   font-weight: 800;
   font-size: 1.7em;
   padding: 0.3em 0.8em;
@@ -269,11 +277,18 @@ header .auth--buttons{
   font-size: 1.3em;
   padding: 0.8em 1.6em;
 }
-.create--button.disabled{
+.add--button.disabled{
   background-color: transparent;
   border:4px solid var(--color-a);
   color:var(--color-a)
   
+}
+.create--button{
+  background-color: var(--color-d);
+  color: white;
+  margin: 1em;
+  font-size: 1.3em;
+  padding: 0.8em;
 }
 .create{
   display: flex;
@@ -341,7 +356,37 @@ header .auth--buttons{
 
 
 .fork--branch .caret{
-  margin: auto;
+  margin: auto 1em;
+ 
+}
+.date--picker button{
+  max-height: 1em;
+  max-width: 1em;
+  bottom: 0.5em;
+  right: 0.5em;
+}
+.info--buttons{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+}
+
+.info--update{
+  background-color: var(--color-d);
+  border-radius: 1em;
+}
+.info--textarea{
+  background-color: transparent;
+  border-radius: 12px;
+  margin-top: 1em;
+  color:var(--color-e);
+  padding: 1.5em 1em;
+  min-height: 1.5em;
+  border: transparent;
+}
+.branch--error{
+  color:white;
 }
 .fork--branch{
   display: flex;
@@ -350,11 +395,11 @@ header .auth--buttons{
   font-size: 1.4rem;
   cursor: pointer;
   color:var(--color-e);
-  border-top-left-radius: 8px;
-  border-bottom-left-radius: 8px;
+  border-radius:2em;
   list-style-position: outside;
   text-align: center;
   margin: 0.2em 0;
+  width: 100%;
   background-color: var(--color-g);
   box-shadow: -10px 6px 37px -3px var(--shadow-fork);
 -webkit-box-shadow: -10px 6px 37px -3px var(--shadow-fork);

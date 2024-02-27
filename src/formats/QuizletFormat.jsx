@@ -37,9 +37,9 @@ function QuizletFormat(props){
           }
         }
         if(data){
-          const {id,name,dueDate,parentId,completed,userId} = data
+          const {id,name,dueDate,description,parentId,completed,userId} = data
         
-          const fork = new ForkControl(id,name,dueDate,completed,userId,parentId,[])
+          const fork = new ForkControl(id,name,description,dueDate,completed,userId,parentId,[])
         
           return <div>
           <Fork root={fork} />

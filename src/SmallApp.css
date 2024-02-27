@@ -11,11 +11,11 @@
     }
     #tree{
    
-        overflow: hidden;
         /* border: 2px solid var(--color-c); */
         padding: 1em 0em 0em 1em;
         margin: 0;
         height: 100%;
+        width: 100vw;
     }
     .create--div{
     width: 100%;
