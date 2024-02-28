@@ -28,7 +28,7 @@ export default function TreeFormat(props){
     const greetings = ["Hi! Heard you want to be productive?",
     "Not sure where to start?",
     "Check in with yourself, everything requires focus...",
-    "Ask yourself, what is the intensity of foucs you want to use low or high? Then we can flow"]
+    "Ask yourself, what is the intensity of focus you want to use low or high? Then we can flow"]
     const next= ()=>{
       setIndex(prevState=>{
        let state=  prevState+1
@@ -49,14 +49,14 @@ export default function TreeFormat(props){
       <div className='top'>
       
       {!auth?<div className='greetings'>
-        {index==3?<h4>Mindfulness</h4>:null}
+        {index==greetings.length-1?<h4>Mindfulness</h4>:null}
       <h2>
   {greetings[index]}
       
       </h2>
-      <button className="button--next" onClick={()=>next()}>
+      {index!==greetings.length-1?<button className="button--next" onClick={()=>next()}>
       Next
-        </button>
+        </button>:null}
       </div>
       :<div></div>}
       </div>

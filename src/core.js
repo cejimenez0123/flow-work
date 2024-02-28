@@ -5,11 +5,9 @@ const WorkHigh = {
     id:"65ce77bcd2bd472600937db2"
 }
 const RelaxHigh = {
-    //
     id:"65ce77b1d2bd472600937db1"
 }
 const RelaxLow = {
-    //65ce77d5d2bd472600937db4
     id:"65ce77d5d2bd472600937db4"
 }
 const WorkLow = {
