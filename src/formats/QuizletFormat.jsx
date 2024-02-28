@@ -4,6 +4,7 @@ import Enviroment from "../core"
 import useSWR from "swr"
 import Fork from "../components/Fork"
 import axios from "axios"
+import useCaseUnpackFork from "../useCases/useCaseUnpackFork"
 const fetcher = (url) =>axios.get(url)
   .then((res) => res.data);
 function QuizletFormat(props){
@@ -12,9 +13,6 @@ function QuizletFormat(props){
     const {data,error,isLoading}= useSWR(Enviroment.BASE_URL+"/fork/",fetcher)
     const handleStart = ()=>{
           setStart(true)
-      } 
-    const startOver = ()=>{
-        setStart(false)
       } 
       const ForkDiv =(props)=>{
         if(isLoading){
@@ -36,11 +34,8 @@ function QuizletFormat(props){
           </div>
           }
         }
-        if(data){
-          const {id,name,dueDate,description,parentId,completed,userId} = data
-        
-          const fork = new ForkControl(id,name,description,dueDate,completed,userId,parentId,[])
-        
+    if(data){
+          const fork = useCaseUnpackFork(data)
           return <div>
           <Fork root={fork} />
           </div>

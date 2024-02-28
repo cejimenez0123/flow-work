@@ -399,7 +399,7 @@ header .auth--buttons{
   list-style-position: outside;
   text-align: center;
   margin: 0.2em 0;
-  width: 100%;
+  width: 90%;
   background-color: var(--color-g);
   box-shadow: -10px 6px 37px -3px var(--shadow-fork);
 -webkit-box-shadow: -10px 6px 37px -3px var(--shadow-fork);

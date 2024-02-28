@@ -98,7 +98,7 @@ function ForkBranch({fork,defaultOpen,removeRoot}){
                         node.userId,
                         node.parentId,
                         [])
-                return <ForkBranch fork={choice}  removeRoot={(root)=>removeTask(root)}/>
+                return <ForkBranch key={node.id} fork={choice}  removeRoot={(root)=>removeTask(root)}/>
             })}
   
                         <AddChoice/>

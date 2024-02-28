@@ -9,11 +9,7 @@ export default function Choice({choice,handleChoice}){
     const deleteTask=()=>{
 
     }
-    const updateTask=()=>{
-        axios.put(Enviroment.BASE_URL+`/children/${choice.id}`).then(
-
-        )
-    }
+  
     const CheckedInputs=()=>{
         if(fork && fork.userId && fork.userId !== Enviroment.ADMIN_UID)
         return checked?
