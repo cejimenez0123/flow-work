@@ -34,21 +34,25 @@ button{
 .error-text{
   color:var(--color-e)
 }
-.header{
-  display: flex;
-  flex-direction: row;
-  background-color: var(--color-d);
-  max-width: 100vw;
-  color:white;
-  justify-content: space-between;
-  font-family: 'Inter', sans-serif;
+.navbar{
+
+  background-color: var(--color-d) ;
+
 }
+@media (min-width: 768px) {
+  .range.color{
+    max-width: 30rem;
+  }
+  .user.form-control{
+    width: fit-content;
+  
+  }
+} 
 .App{
   width: 100vw;
   height: 100vh;
   overflow: scroll;
   background-color: var(--color-b);
-  color:var(--color-c);
   font-family: 'Inter', sans-serif;
 }
 
@@ -264,12 +268,18 @@ header .auth--buttons{
 }
 .greetings{
   width: fit-content;
-  max-width: 30em;
+  width: 30em;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   margin: auto;
   padding: 2em;
-  min-height:5rem;
+  height:15rem;
   color: var(--color-d);
   
+}
+.greetings button{
+  width: 10em;
 }
 .button--next{
   color:#ffffff;

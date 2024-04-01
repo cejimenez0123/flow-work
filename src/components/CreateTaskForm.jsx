@@ -30,7 +30,7 @@ function CreateTaskForm({parentFork,handleNew}){
        }}).then(
             response=>{
                 if(response.data){
-                    console.log(response.data)
+                
                     handleNew(response.data);
                 }
              

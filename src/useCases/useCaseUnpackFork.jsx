@@ -2,9 +2,13 @@
 import ForkControl from "../data/ForkControl"
 
 function useCaseUnpackFork(data){
-    const {id,name,dueDate,description,parentId,completed,userId} = data
-    const fork = new ForkControl(id,name,description,dueDate,completed,userId,parentId,[])
-    return fork
+    if(data){
+        const {id,name,style,dueDate,description,parentId,completed,userId} = data
+        const fork = new ForkControl(id,name,description,style,dueDate,completed,userId,parentId,[])
+        return fork
+    }
+    
+    return null
 
 }
 export default useCaseUnpackFork

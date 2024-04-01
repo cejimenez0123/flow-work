@@ -2,18 +2,21 @@
 import {Dialog, Menu,IconButton,Box,useMediaQuery,MenuItem,AppBar,Toolbar,Typography,Button} from "@mui/material"
 import Enviroment from "../core"
 import ClearIcon from '@mui/icons-material/Clear';
-import { useState ,useLayoutEffect,useContext} from "react"
+import { useState ,useLayoutEffect,useContext, useEffect} from "react"
 import axios from "axios"
 import MyContext from "../context"
-
-
+import HomeIcon from '@mui/icons-material/Home';
+import { useNavigate } from "react-router-dom";
+import { Router } from "../core";
 const login = "login"
 const signUp = "signup"
-export default function Header(props){
+export default function Header({ref}){
    
-    const {format,setFormat,auth,setAuth}=useContext(MyContext)
+    const {format,setFormat,auth,setAuth,setUser,user}=useContext(MyContext)
     const [authentication,setAuthentication] = useState(null)
     const [anchorEl, setAnchorEl] = useState(null);
+    const [err,setErr]=useState(null);
+    const navigate = useNavigate()
     const open = Boolean(anchorEl);
     const smallScreen = useMediaQuery('(max-width:900px)');
     const handleClose = () => {
@@ -27,38 +30,36 @@ export default function Header(props){
             const {data} = response
             const {token}=data
             setAuth(token)
+            setErr(null)
             setAuthentication(null)
-            window.location.reload()
+        
             localStorage.setItem("tokenTimestamp",JSON.stringify( Date.now()));
             localStorage.setItem('token',token)
+          }).catch(err=>{
+            setErr(err.message)
           })
       }
       const checkAuth=()=>{
         const token =localStorage.getItem('token')
         if(token){
-       
           axios.get(Enviroment.BASE_URL+"/auth/", { 
             headers: 
               { Authorization: "Bearer " + token,
              }
             }).then(res=>{
-              
+              setErr(null)
              
             if(res.status==200){
               setAuth(token)
+              getUser()
               setAuthentication(null)
             }
-            console.log(res)
-            if(res.status==401){
-              localStorage.setItem('token',null)
-              setAuth(null)
-              setAuthentication(null)}
-          }).catch(err=>{
           
+          }).catch(err=>{
               localStorage.setItem('token',null)
               setAuth(null)
               setAuthentication(null)}
-       
+           
           )
         }
       }
@@ -76,21 +77,35 @@ export default function Header(props){
           localStorage.setItem("tokenTimestamp",JSON.stringify(Date.now()));
           localStorage.setItem('token',token)
     
+        }).catch(err=>{
+          window.alert(err.message)
         })
       }
-      
+      const getUser = ()=>{
+        const token =localStorage.getItem('token')
+        axios.get(Enviroment.BASE_URL + "/auth/user",{headers: {
+          Authorization: 'Bearer ' + token
+        }}).then(response=>{
+          setUser(response.data)
+        }).catch(err=>{
+          console.error(err);
+        })
+      }
       const onLogOut = (e)=>{
         localStorage.setItem("token",null)
         localStorage.setItem("tokenTimestamp",null);
         setAuth(null)
-
       }
       useLayoutEffect(()=>{
         checkAuth()
       },[])
       const handleOpenNavMenu = (event) => {
         setAnchorEl(event.currentTarget);
-    };
+      };
+      const goToHome = ()=>{
+        let str = Router.home.createRoute()
+        navigate(str)
+      } 
       const authenticating = ()=>{
         switch(authentication){
           case login :{
@@ -98,6 +113,7 @@ export default function Header(props){
                 <form onSubmit={(e)=>onLogin(e)}>
                     <input className='auth--input' type="text" name="email" placeholder="E mail"/>
                     <input className='auth--input'type="password" name="password" placeholder="Password"/>
+                    {Boolean(err)?<p>{err}</p>:null}
                     <button type="submit">Log In</button>
                 </form>
               </div>
@@ -116,18 +132,49 @@ export default function Header(props){
         return <div></div>
       }  }
       }
+      const goToBasePath =()=>{
+        navigate(Router.base.createRoute())
+      }
       const hideDialog =()=>setAuthentication(null)
- 
+    const [style,setStyle] = useState(ref? {primary: ref.current.style.primary, background:"#E0FFF9"}:
+      {primary:{
+        main: "#3D687A",
+  
+        background:"#E0FFF9"
+    },
+    secondary:{
+        main:"#60FFB6"
+    }
+  })
+//   useEffect(()=>{
+//     setStyle(ref? {primary: ref.current.style.primary, background:"#E0FFF9"}:
+//     {primary:{
+//       main: "#3D687A",
+
+//       background:"#E0FFF9"
+//   },
+//   secondary:{
+//       main:"#60FFB6"
+//   }
+// },[])
+
+  // },[ref])
       return(
-       
-         <Box sx={{ flexGrow: 1 }}>
-        <AppBar style={{backgroundColor:"#3D687A"}} position="static">
+       <div id="nav">
+         <Box id="header" sx={{ flexGrow: 1 }}>
+        <AppBar  position="static">
           <Toolbar>
            
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               FlowTree
             </Typography>
-            {auth?<Button onClick={()=>{onLogOut()}} color="inherit">Log Out</Button>:<div>
+          {auth?
+          <IconButton onClick={goToHome}>
+            <HomeIcon  sx={{height: "1.5em",width:"1.5em"}}/>
+          </IconButton>:null}
+          
+          <Button color="inherit"onClick={()=>goToBasePath()}>Tree Format</Button>
+        {auth?<Button onClick={()=>{onLogOut()}} color="inherit">Log Out</Button>:<div>
               <Button
                             
                             
@@ -156,10 +203,6 @@ export default function Header(props){
         <MenuItem onClick={()=>setAuthentication(login)}>Log In</MenuItem>
   
       </Menu></div>}
-          
-            {format? <Button color="inherit"onClick={()=>setFormat(!format)}>
-          Quizlet Format
-        </Button>:<Button color="inherit"onClick={()=>setFormat(!format)}>Tree Format</Button>}
           </Toolbar>
         </AppBar>
         <Dialog  fullScreen={smallScreen?true:false} onClose={()=>hideDialog()} open={Boolean(authentication)}>
@@ -171,5 +214,6 @@ export default function Header(props){
       {authenticating()}
      </Dialog>
       </Box>
+      </div>
       )
 }

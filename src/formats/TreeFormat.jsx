@@ -4,19 +4,21 @@ import Enviroment from "../core"
 import ForkControl from '../data/ForkControl';
 import {Skeleton} from "@mui/material"
 import ForkBranch from '../components/ForkBranch';
-import { useContext, useState } from 'react';
+import { useContext, useState ,useRef} from 'react';
 import axios from 'axios';
 import "../SmallApp.css"
 import useCaseUnpackFork from '../useCases/useCaseUnpackFork';
 import MyContext from '../context';
 const fetcher = (url) =>axios.get(url)
   .then((res) => res.data);
-export default function TreeFormat(props){
+export default function TreeFormat({appRef}){
     const {auth} = useContext(MyContext)
+    // const bottomRef = useRef()
+
     const {data,error,isLoading}= useSWR(Enviroment.BASE_URL+"/fork/",fetcher)
     const token = localStorage.getItem("token")
-    const loggedIn = token!==null && token!=="null"
-    const [index,setIndex]=useState(loggedIn?0:3)
+   
+    const [index,setIndex]=useState(auth?3:0)
     const Loading = ()=>{
     if(isLoading){
       return(<div><Skeleton variant='rounded' width={"100%"}/></div>)
@@ -41,33 +43,44 @@ export default function TreeFormat(props){
       })
    
     }
-   
-  if(data){
+   const [style] = useState(appRef.current? {primary: appRef.current.style.primary}:
+    {primary:{
+      main: "#3D687A",
+
+      background:"#E0FFF9"
+  },
+  secondary:{
+      main:"#60FFB6"
+  }
+})
+
  const fork = useCaseUnpackFork(data)
-    return(
+  return fork? 
       <div className='tree--format' >
       <div className='top'>
       
       {!auth?<div className='greetings'>
+        <div>
         {index==greetings.length-1?<h4>Mindfulness</h4>:null}
       <h2>
   {greetings[index]}
       
       </h2>
+      </div>
       {index!==greetings.length-1?<button className="button--next" onClick={()=>next()}>
       Next
         </button>:null}
       </div>
       :<div></div>}
       </div>
-      <div className='bottom'>
-        {!fork?<Loading/>: <ul id="tree" >
+      <div style={{backgroundColor:style.primary}}  className='bottom'>
+        {!fork?<Loading/>: <ul  id="tree" >
       <ForkBranch defaultOpen={true} fork={fork}/>
       </ul>}
    
       </div>
-      </div>)
-  }
+      </div>: <Loading/>
+  
 }
 
 

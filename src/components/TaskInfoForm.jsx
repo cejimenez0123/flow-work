@@ -13,6 +13,9 @@ import useCaseDeleteTask from '../useCases/useCaseDeleteTasks';
 import useCaseUpdateFork from '../useCases/useCaseUpdateFork';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import MyContext from '../context';
+import Wheel from '@uiw/react-color-wheel';
+import { hsvaToHex } from '@uiw/color-convert';
+
 function TaskInfoForm({fork,removeTask,updateTask}){
     const token = localStorage.getItem("token")
     const loggedIn = token!==null&&token!=="null"
@@ -22,10 +25,10 @@ function TaskInfoForm({fork,removeTask,updateTask}){
     const [subTasks,setSubTasks]=useState([])
     const [date, setDate] = useState(dayjs(fork.dueDate));
     const [dueDate, setDueDate] = useState(fork.dueDate!==null? true:false)
-    const [completed,setCompleted]=useState(fork.completed)
+    const [completed,setCompleted]=useState(false)
     const [description,setDescription] = useState(fork.description??"")
     const [onMouseDown,setOnMouseDown] = useState(false)
-
+    const [hsva, setHsva] = useState({ h: 214, s: 43, v: 90, a: 1 });
     const handleName = (e)=>{
         setName(e.currentTarget.value)
     }
@@ -35,29 +38,29 @@ function TaskInfoForm({fork,removeTask,updateTask}){
     useEffect(()=>{
         getTasksSubTasks()
     },[])
-    useEffect(()=>{console.log(subTasks)},[subTasks])
     const deleteTask = ()=>{
         let list = [...subTasks.map(task=>task.id),fork.id]
         const params = {
             list,
             fork
         }
-        console.log(params)
        
         useCaseDeleteTask(params,result=>{
-            console.log(result)
+            
             removeTask(fork)})
     }
+
     const updateFork = ()=>{
         const params = {
             fork,
             name,
             dueDate:date,
+            style:{backgroundColor: hsvaToHex(hsva)},
             completed,
             description
         }
         useCaseUpdateFork(params,(result)=>{
-            console.log(result)
+           
         })
     }
     const getTasksSubTasks = ()=>{
@@ -78,12 +81,11 @@ function TaskInfoForm({fork,removeTask,updateTask}){
            
     }
     const handleOnMouseDown = (e)=>{
-        console.log(e.target)
+    
         if(loggedIn && notAdmin){
             setOnMouseDown(true)
         } 
      }
-      console.log(fork) 
     return(<div className='create--div'>
             <FormGroup className='create--form'>
             {!onMouseDown?<h3 className={`info--name`} onMouseOver={(e)=>handleOnMouseDown(e)}>
@@ -99,17 +101,20 @@ function TaskInfoForm({fork,removeTask,updateTask}){
   onChange={(newValue) => setDate(newValue)}/>
                 </LocalizationProvider></div>:null
                 }
+                 {notAdmin && auth?  <Wheel color={hsva} onChange={(color) => setHsva({ ...hsva, ...color.hsva })} />:null}
                 {notAdmin && auth?<FormControlLabel  
                     control={<Checkbox value={completed} 
                     onChange={()=>setCompleted(!completed)}/>} 
                     label="Completed" />:null}
+                    
                 {auth && notAdmin?  <div className='info--buttons'>
-                    <Button onClick={updateFork}className='info--update'>
+                    <Button type="submit" onClick={updateFork}className='info--update'>
                         Update
                     </Button>
                     <Button onClick={deleteTask} 
                     className='info--delete' style={{borderRadius:"1em",backgroundColor:"maroon"}}><DeleteOutlineIcon/></Button></div>
                  :null}
+                
             </FormGroup>
 
     </div>)

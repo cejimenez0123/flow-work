@@ -7,6 +7,7 @@ import {Skeleton,Dialog,IconButton,useMediaQuery} from "@mui/material"
 import Choice from "./Choice";
 import CreateTaskForm from "./CreateTaskForm";
 import ClearIcon from '@mui/icons-material/Clear';
+import useCaseUnpackFork from "../useCases/useCaseUnpackFork";
 const fetcher = (url, token) =>axios.get(url, { headers: { Authorization: "Bearer " + token } })
   .then((res) => res.data);
 
@@ -59,14 +60,7 @@ export default function Fork({root}){
     <div  
     ><ul >
     {choices.map(node=>{
-        let choice= new ForkControl(    node.id,
-                                        node.name,
-                                        node.description,
-                                        node.dueDate,
-                                        node.completed,
-                                        node.userId,
-                                        node.parentId,
-                                        [])
+        let choice= useCaseUnpackFork(node)
         return <Choice key={node.id}choice={choice} handleChoice={(chosen)=>handleChoice(chosen)}/>
     })}</ul></div>)}else if(choices.length==0){
         return(<div className="best-self">

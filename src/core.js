@@ -23,7 +23,7 @@ const Draw = {
     id:"65ce78a3d2bd472600937dbd"
 }
 const Enviroment = {
-    BASE_URL: PROD_URL,
+    BASE_URL: DEV_URL,
     ADMIN_UID:"65d3a68043f11b3ea66838f7",
     WORK_ARRAY:[WorkLow.id,WorkHigh.id,RelaxHigh.id,RelaxLow.id],
     root_array:[
@@ -62,4 +62,13 @@ const Enviroment = {
             
                 
 }
+const Router = {
+    base: {
+        createRoute:()=>"/flow-work/"
+    },
+    home: {
+        createRoute:()=>"/flow-work/home/"
+    }
+}
+export {Router}
 export default Enviroment

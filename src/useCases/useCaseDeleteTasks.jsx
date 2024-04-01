@@ -4,7 +4,7 @@ import Enviroment from "../core"
 function useCaseDeleteTask(params,then){
     const token = localStorage.getItem("token")
     const {list,fork}=params
-    console.log(params)
+  
     axios.delete(Enviroment.BASE_URL + `/fork/${fork.id}`,
        {headers: {
             Authorization: 'Bearer ' + token

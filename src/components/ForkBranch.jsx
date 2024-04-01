@@ -12,6 +12,7 @@ import ClearIcon from "@mui/icons-material/Clear"
 import InfoIcon from '@mui/icons-material/Info';
 import TaskInfoForm from "./TaskInfoForm";
 import MyContext from "../context";
+import useCaseUnpackFork from "../useCases/useCaseUnpackFork";
 function ForkBranch({fork,defaultOpen,removeRoot}){
     const [active,setActive]=useState(defaultOpen?defaultOpen:false)
     const [openDialog,setOpenDialog]=useState(false)
@@ -28,19 +29,24 @@ function ForkBranch({fork,defaultOpen,removeRoot}){
       setForkChoices(choices)
     },[choices])
     const AddChoice = ()=>{
-      if(fork.userId !== Enviroment.ADMIN_UID && auth
-        || (Enviroment.root_array.includes(fork.id)&&auth)){
-        return (<li onClick={showDialog} className='fork--branch add'><span   
+      // fork.userId !== Enviroment.ADMIN_UID && auth
+      //   || (Enviroment.root_array.includes(fork.id)&&auth
+      if(fork.userId == Enviroment.ADMIN_UID && !Enviroment.WORK_ARRAY.includes(fork.id)){
+        return null
+      }else{
+      if(fork.userId !== Enviroment.ADMIN_UID){
+        return (<li onClick={showDialog} 
+          className='fork--branch add'><span   
         className='branch--add'><AddIcon/></span><p lassName={`branch--text `}>Add Task</p></li>)
       }else{
-        if(Enviroment.root_array.includes(fork.id)){
-        return(<li onClick={showDialog}className='fork--branch add'> 
+        if(!auth){
+        return(<li onClick={showDialog}
+         className='fork--branch add'> 
           <p  className="branch--text add">Sign Up to add task</p><span   
         className='branch--add'><AddIcon/></span></li>)
-      }else{
-      return null
       }
       }}
+    }
         
         
     
@@ -77,7 +83,7 @@ function ForkBranch({fork,defaultOpen,removeRoot}){
     if(fork){
       return(
      <div>
-      <li onClick={handleOpen} className={`fork--branch`}>
+      <li style={fork.style}onClick={handleOpen} className={`fork--branch`}>
         <span className="fork--span" >
         <span className="caret" >
           {active?<ExpandMoreIcon/>:<ChevronRightIcon/>}
@@ -89,15 +95,9 @@ function ForkBranch({fork,defaultOpen,removeRoot}){
           </li> 
         <ul style={{display:active && Array.isArray(forkChoices)?"":"none"}}className='ul--branch'>
             {forkChoices.map(node=>{
-                    let choice= new ForkControl(    
-                        node.id,
-                        node.name,
-                        node.description,
-                        node.dueDate,
-                        node.completed,
-                        node.userId,
-                        node.parentId,
-                        [])
+              
+                    let choice= useCaseUnpackFork(node)
+                    
                 return <ForkBranch key={node.id} fork={choice}  removeRoot={(root)=>removeTask(root)}/>
             })}
   
