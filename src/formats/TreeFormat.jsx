@@ -7,14 +7,13 @@ import ForkBranch from '../components/ForkBranch';
 import { useContext, useState ,useRef} from 'react';
 import axios from 'axios';
 import "../SmallApp.css"
+import { hsvaToHex,hexToHsva} from '@uiw/color-convert';
 import useCaseUnpackFork from '../useCases/useCaseUnpackFork';
 import MyContext from '../context';
 const fetcher = (url) =>axios.get(url)
   .then((res) => res.data);
-export default function TreeFormat({appRef}){
-    const {auth} = useContext(MyContext)
-    // const bottomRef = useRef()
-
+export default function TreeFormat(props){
+    const {auth,style}  = useContext(MyContext)
     const {data,error,isLoading}= useSWR(Enviroment.BASE_URL+"/fork/",fetcher)
     const token = localStorage.getItem("token")
    
@@ -43,16 +42,7 @@ export default function TreeFormat({appRef}){
       })
    
     }
-   const [style] = useState(appRef.current? {primary: appRef.current.style.primary}:
-    {primary:{
-      main: "#3D687A",
 
-      background:"#E0FFF9"
-  },
-  secondary:{
-      main:"#60FFB6"
-  }
-})
 
  const fork = useCaseUnpackFork(data)
   return fork? 

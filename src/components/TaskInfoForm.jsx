@@ -1,7 +1,7 @@
 
 import { FormGroup,TextField,Button,Checkbox,FormControlLabel,IconButton} from '@mui/material';
 import { TextareaAutosize } from '@mui/base/TextareaAutosize';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState ,useRef} from 'react';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -18,13 +18,14 @@ import { hsvaToHex } from '@uiw/color-convert';
 
 function TaskInfoForm({fork,removeTask,updateTask}){
     const token = localStorage.getItem("token")
+    const btnRef = useRef()
     const loggedIn = token!==null&&token!=="null"
     const notAdmin = fork.userId!==Enviroment.ADMIN_UID
     const {auth}=useContext(MyContext)
     const [name,setName]=useState(fork.name)
     const [subTasks,setSubTasks]=useState([])
     const [date, setDate] = useState(dayjs(fork.dueDate));
-    const [dueDate, setDueDate] = useState(fork.dueDate!==null? true:false)
+    const [dueDate, setDueDate] = useState(fork.dueDate!==null)
     const [completed,setCompleted]=useState(false)
     const [description,setDescription] = useState(fork.description??"")
     const [onMouseDown,setOnMouseDown] = useState(false)
@@ -62,6 +63,7 @@ function TaskInfoForm({fork,removeTask,updateTask}){
         useCaseUpdateFork(params,(result)=>{
            
         })
+        updateTask(params.style)
     }
     const getTasksSubTasks = ()=>{
             recursive(fork.id)
@@ -86,6 +88,9 @@ function TaskInfoForm({fork,removeTask,updateTask}){
             setOnMouseDown(true)
         } 
      }
+     const handleDueDate = (value)=>{
+        setDueDate(!dueDate)
+     }
     return(<div className='create--div'>
             <FormGroup className='create--form'>
             {!onMouseDown?<h3 className={`info--name`} onMouseOver={(e)=>handleOnMouseDown(e)}>
@@ -94,7 +99,11 @@ function TaskInfoForm({fork,removeTask,updateTask}){
             {!onMouseDown?<p className='info--textarea' onMouseOver={(e)=>handleOnMouseDown(e)}> 
             {description}</p>:<textarea className='info--textarea'
             value={description} onChange={(e)=>handleDescription(e)}/>}
-                {auth &&  notAdmin && dueDate?
+           {notAdmin && auth? <FormControlLabel
+            label={"Is there a due date?"}
+            control={<Checkbox value={dueDate} />}
+            onChange={(e)=>handleDueDate()}
+            />:null}{auth &&  notAdmin && dueDate?
                 <div className='date--picker'>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker  value={date}
@@ -108,7 +117,7 @@ function TaskInfoForm({fork,removeTask,updateTask}){
                     label="Completed" />:null}
                     
                 {auth && notAdmin?  <div className='info--buttons'>
-                    <Button type="submit" onClick={updateFork}className='info--update'>
+                    <Button type="submit" style={{backgroundColor:hsvaToHex(hsva)}} onClick={updateFork}className='info--update'>
                         Update
                     </Button>
                     <Button onClick={deleteTask} 

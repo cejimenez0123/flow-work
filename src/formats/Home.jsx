@@ -9,12 +9,12 @@ import { hsvaToHex,hexToHsva} from '@uiw/color-convert';
 import EditableInputHSLA from '@uiw/react-color-editable-input-hsla';
 import useCaseUpdateUser from '../useCases/useCaseUpdateUser';
 
-function Home({appRef,headerRef,theme}){
+function Home({appRef,headerRef}){
    
-    const {auth,user}=useContext(MyContext)
-    const [backgroundHsva,setBackgroundHsva] = useState(hexToHsva(theme.palette.primary.main))
-    const [primaryHsva,setPrimaryHsva] = useState(hexToHsva(theme.palette.primary.background))
-   const [textHsva,setTextHsva] = useState(hexToHsva(theme.palette.primary.main))
+    const {auth,user,setStyle,style}=useContext(MyContext)
+    const [backgroundHsva,setBackgroundHsva] = useState(hexToHsva(style.backgroundColor))
+    const [primaryHsva,setPrimaryHsva] = useState(hexToHsva(style.primary))
+   const [textHsva,setTextHsva] = useState(hexToHsva(style.color))
   const bgRef = useRef()
   const priRef = useRef()
   const textRef = useRef()
@@ -28,7 +28,7 @@ function Home({appRef,headerRef,theme}){
       // console.log(backgroundHsva)
             setBackgroundHsva({ ...backgroundHsva, ...color.hsva})
             let hex = hsvaToHex(backgroundHsva)
-            console.log(backgroundHsva)
+           
             appRef.current.style.backgroundColor = hex
      
             
@@ -54,9 +54,9 @@ const adjustTextColor = (color)=>{
       color: hsvaToHex(textHsva),
       primary: hsvaToHex(primaryHsva),
     }
-    console.log(style)
+    setStyle(style)
     useCaseUpdateUser({style},(user)=>{
-      console.log(user)
+      console.log(style)
       window.alert("saved")
     })
   }

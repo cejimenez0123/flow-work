@@ -6,11 +6,11 @@ import MyContext from '../context'
 import TreeFormat from "./TreeFormat"
 import {Navigate, useNavigate,Routes,Route} from "react-router-dom";
 import { Router } from '../core'
-import {Dialog, Menu,IconButton,Box,useMediaQuery,MenuItem,AppBar,Toolbar,Typography,Button} from "@mui/material"
+import {Dialog, Menu,IconButton,Box,useMediaQuery,MenuItem,Button} from "@mui/material"
 import User from '../data/User'
 import HomeIcon from '@mui/icons-material/Home';
 import Home from "./Home"
-import theme from '../theme'
+// import theme from '../theme'
 import Enviroment from '../core';
 import axios from "axios"
 const login = "login"
@@ -18,7 +18,7 @@ const signUp = "signup"
 
 export default function NavGraph({appRef}){
         const headerRef = useRef()
-        const {format,setFormat,auth,setAuth,setUser,user}=useContext(MyContext)
+        const {auth,setAuth,setUser,style}=useContext(MyContext)
         const [authentication,setAuthentication] = useState(null)
         const [anchorEl, setAnchorEl] = useState(null);
         const [err,setErr]=useState(null);
@@ -92,7 +92,7 @@ export default function NavGraph({appRef}){
             axios.get(Enviroment.BASE_URL + "/auth/user",{headers: {
               Authorization: 'Bearer ' + token
             }}).then(response=>{
-              setUser(response.data)
+              setUser(response.data.user)
             }).catch(err=>{
               console.error(err);
             })
@@ -142,14 +142,17 @@ export default function NavGraph({appRef}){
             navigate(Router.base.createRoute())
           }
           const hideDialog =()=>setAuthentication(null)
-
+console.log(style)
           return(
             <div>
 
 
-<div ref={headerRef} className="navbar ">
+<div ref={headerRef} 
+style={{backgroundColor:style.primary,
+        color:style.color}}
+        className="navbar ">
   <div className="flex-1">
-    <a className="btn btn-ghost text-xl">FlowTree</a>
+    <a className="btn btn-ghost text-xl" >FlowTree</a>
   </div>
   <div className="flex-none">
     <ul className="menu menu-horizontal px-1">
@@ -158,11 +161,9 @@ export default function NavGraph({appRef}){
                 <HomeIcon  sx={{height: "1.5em",width:"1.5em"}}/>
               </IconButton>:null}
               
-              <Button color="inherit"onClick={()=>goToBasePath()}>Tree Format</Button>
+              <Button  color="inherit"onClick={()=>goToBasePath()}>Tree Format</Button>
             {auth?<Button onClick={()=>{onLogOut()}} color="inherit">Log Out</Button>:<div>
-                  <Button
-                                
-                                
+                  <Button       
                                 aria-haspopup="true"
                                 onClick={(e)=>handleOpenNavMenu(e)}
                                 color="inherit"
@@ -184,8 +185,10 @@ export default function NavGraph({appRef}){
               horizontal: 'left',
             }}
           >
-            <MenuItem onClick={()=>setAuthentication(signUp)}>Sign Up</MenuItem>
-            <MenuItem onClick={()=>setAuthentication(login)}>Log In</MenuItem>
+            <MenuItem 
+                      onClick={()=>setAuthentication(signUp)}>Sign Up</MenuItem>
+            <MenuItem 
+                      onClick={()=>setAuthentication(login)}>Log In</MenuItem>
       
           </Menu></div>}
 
@@ -204,7 +207,7 @@ export default function NavGraph({appRef}){
         
     <Routes>
       <Route  path={Router.base.createRoute()} 
-      element={<TreeFormat appRef={appRef}/>}/>
+      element={<TreeFormat appRef={appRef} />}/>
       <Route  path={"/flow-work/home/"} 
         element={
             <div>
@@ -213,7 +216,7 @@ export default function NavGraph({appRef}){
         {auth?<Home 
             headerRef={headerRef}
             appRef={appRef}
-        theme={theme}/>:<Navigate to={Router.base.createRoute()}/>}
+       />:<Navigate to={Router.base.createRoute()}/>}
         </div>}/>
     </Routes>
     

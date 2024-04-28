@@ -10,9 +10,9 @@ import { useNavigate } from "react-router-dom";
 import { Router } from "../core";
 const login = "login"
 const signUp = "signup"
-export default function Header({ref}){
+export default function Header(){
    
-    const {format,setFormat,auth,setAuth,setUser,user}=useContext(MyContext)
+    const {auth,setAuth,setUser,style}=useContext(MyContext)
     const [authentication,setAuthentication] = useState(null)
     const [anchorEl, setAnchorEl] = useState(null);
     const [err,setErr]=useState(null);
@@ -86,7 +86,7 @@ export default function Header({ref}){
         axios.get(Enviroment.BASE_URL + "/auth/user",{headers: {
           Authorization: 'Bearer ' + token
         }}).then(response=>{
-          setUser(response.data)
+          setUser(response.data.user)
         }).catch(err=>{
           console.error(err);
         })
@@ -136,34 +136,11 @@ export default function Header({ref}){
         navigate(Router.base.createRoute())
       }
       const hideDialog =()=>setAuthentication(null)
-    const [style,setStyle] = useState(ref? {primary: ref.current.style.primary, background:"#E0FFF9"}:
-      {primary:{
-        main: "#3D687A",
-  
-        background:"#E0FFF9"
-    },
-    secondary:{
-        main:"#60FFB6"
-    }
-  })
-//   useEffect(()=>{
-//     setStyle(ref? {primary: ref.current.style.primary, background:"#E0FFF9"}:
-//     {primary:{
-//       main: "#3D687A",
-
-//       background:"#E0FFF9"
-//   },
-//   secondary:{
-//       main:"#60FFB6"
-//   }
-// },[])
-
-  // },[ref])
       return(
        <div id="nav">
          <Box id="header" sx={{ flexGrow: 1 }}>
-        <AppBar  position="static">
-          <Toolbar>
+        <AppBar   position="static">
+          <Toolbar style={{backgroundColor:style.primary}}>
            
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               FlowTree

@@ -18,6 +18,7 @@ function ForkBranch({fork,defaultOpen,removeRoot}){
     const [openDialog,setOpenDialog]=useState(false)
     const [openInfo,setOpenInfo]=useState(false)
     const {auth}=useContext(MyContext)
+    const [style,setStyle]= useState(fork.style?fork.style:{backgroundColor: "#FFFFFF"})
     const smallScreen = useMediaQuery('(max-width:800px)');
     const {choices,error,isLoading}= useForkChildren({fork})
     const [forkChoices,setForkChoices]=useState(choices)
@@ -29,15 +30,14 @@ function ForkBranch({fork,defaultOpen,removeRoot}){
       setForkChoices(choices)
     },[choices])
     const AddChoice = ()=>{
-      // fork.userId !== Enviroment.ADMIN_UID && auth
-      //   || (Enviroment.root_array.includes(fork.id)&&auth
+   
       if(fork.userId == Enviroment.ADMIN_UID && !Enviroment.WORK_ARRAY.includes(fork.id)){
         return null
       }else{
       if(fork.userId !== Enviroment.ADMIN_UID){
         return (<li onClick={showDialog} 
-          className='fork--branch add'><span   
-        className='branch--add'><AddIcon/></span><p lassName={`branch--text `}>Add Task</p></li>)
+          className='fork--branch pt-4 pb-4 add'><span   
+        className='branch--add'><AddIcon/></span><p className={`branch--text `}>Add Task</p></li>)
       }else{
         if(!auth){
         return(<li onClick={showDialog}
@@ -49,7 +49,9 @@ function ForkBranch({fork,defaultOpen,removeRoot}){
     }
         
         
-    
+    const updateTask = (style)=>{
+      setStyle(style)
+    }
     if(isLoading){
         return(<div><Skeleton height={"5em"}/></div>)
       }
@@ -83,7 +85,7 @@ function ForkBranch({fork,defaultOpen,removeRoot}){
     if(fork){
       return(
      <div>
-      <li style={fork.style}onClick={handleOpen} className={`fork--branch`}>
+      <li style={{backgroundColor:style.backgroundColor}}onClick={handleOpen} className={`pt-4 pb-4 fork--branch`}>
         <span className="fork--span" >
         <span className="caret" >
           {active?<ExpandMoreIcon/>:<ChevronRightIcon/>}
@@ -110,7 +112,7 @@ function ForkBranch({fork,defaultOpen,removeRoot}){
               <ClearIcon/>
               </IconButton>
             </div>
-            <TaskInfoForm fork={fork} removeTask={(root)=>removeRoot(root)}/>
+            <TaskInfoForm fork={fork} removeTask={(root)=>removeRoot(root)} updateTask={(style)=>updateTask(style)}/>
         </Dialog>
         <Dialog fullScreen={smallScreen?true:false}  open={openDialog} onClose={hideDialog}>
             <div>

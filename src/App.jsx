@@ -10,7 +10,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import User from './data/User'
 import Home from "./formats/Home"
 import NavGraph from './formats/NavGraph'
-import { createTheme } from '@mui/material/styles';
+
 
 
 function App() {
@@ -21,35 +21,36 @@ function App() {
   const [format,setFormat] = useState(true)
   const [auth,setAuth] = useState(null)
   const [user,setUser] = useState(new User(null,null,null))
-  const theme = createTheme({
-    palette: {
-        primary:{
-            main: "#3D687A",
-            
-            background:"#E0FFF9"
-        },
-        secondary:{
-            main:"#60FFB6"
-        }
-    }
-});
-  if(!user.isNull && user.style){
-    theme = createTheme({palette:{ 
-      primary: user.style.primary,
-      background: user.style.backgroundColor,
-      contrastText: user.style.color
-    }})
-  }
+  const [style,setStyle] = useState(user.style? user.style:{backgroundColor
+    :"#3d687a",
+    color:"#3d687a",
+    primary:"#2e8cff"})
+useEffect(()=>{
+  setStyle(user.style? user.style:{backgroundColor
+    :"#3d687a",
+    color:"#3d687a",
+    primary:"#2e8cff"})
+},[user])
+
 
 
   return (
-      <div ref={appRef} className='App'>
+      <div ref={appRef} style={{backgroundColor:style.backgroundColor}} className='App'>
      
-        <MyContext.Provider value={{user,setUser,auth,setAuth,choices,setChoices,format,setFormat}}>
-    <ThemeProvider theme={theme}>
-        <NavGraph appRef={appRef} theme={/>
+        <MyContext.Provider value={{  style,
+                                      setStyle,
+                                      user,
+                                      setUser,
+                                      auth,
+                                      setAuth,
+                                      choices,
+                                      setChoices,
+                                      format,
+                                      setFormat}}>
+
+        <NavGraph appRef={appRef} />
        
-          </ThemeProvider>
+        
      </MyContext.Provider>
     
     </div>
