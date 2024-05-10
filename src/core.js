@@ -1,5 +1,3 @@
-
-const PROD_URL ="https://flow-node-api.onrender.com"
 const RAILWAY_URL="https://flow-node-production.up.railway.app"
 const DEV_URL ="http://localhost:3000"
 const WorkHigh = {
