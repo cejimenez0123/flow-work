@@ -1,5 +1,6 @@
 
 const PROD_URL ="https://flow-node-api.onrender.com"
+const RAILWAY_URL="https://flow-node-production.up.railway.app"
 const DEV_URL ="http://localhost:3000"
 const WorkHigh = {
     id:"65ce77bcd2bd472600937db2"
@@ -23,7 +24,7 @@ const Draw = {
     id:"65ce78a3d2bd472600937dbd"
 }
 const Enviroment = {
-    BASE_URL: PROD_URL,
+    BASE_URL: RAILWAY_URL,
     ADMIN_UID:"65d3a68043f11b3ea66838f7",
     WORK_ARRAY:[WorkLow.id,WorkHigh.id,RelaxHigh.id,RelaxLow.id],
     root_array:[

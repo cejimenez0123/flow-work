@@ -23,7 +23,7 @@ export default function TreeFormat(props){
       return(<div><Skeleton variant='rounded' width={"100%"}/></div>)
     }
     if(error){
-      return(<div>Error:{error.message}</div>)
+      return(<div style={{color:"black"}}>Error:{error.message}</div>)
     }
   }
     const greetings = ["Hi! Heard you want to be productive?",

@@ -22,14 +22,14 @@ function App() {
   const [auth,setAuth] = useState(null)
   const [user,setUser] = useState(new User(null,null,null))
   const [style,setStyle] = useState(user.style? user.style:{backgroundColor
-    :"#3d687a",
-    color:"#3d687a",
-    primary:"#2e8cff"})
+    :"#E0FFF9",
+    color:"#FFFFFF",
+    primary:"#3D687A"})
 useEffect(()=>{
   setStyle(user.style? user.style:{backgroundColor
-    :"#3d687a",
-    color:"#3d687a",
-    primary:"#2e8cff"})
+    :"#E0FFF9",
+    color:"#FFFFFF",
+    primary:"#3D687A"})
 },[user])
 
 
