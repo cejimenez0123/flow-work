@@ -12,6 +12,9 @@
   --shadow-fork:#354850 0.36;
 
 }
+.text-shadow{
+  text-shadow:-0.2px -0.2px 0 #3a3d50de, 0.2px -0.2px 0 #3a3d50de, -0.2px 0.2px 0 #3a3d50de, 0.2px 0.2px 0 #3a3d50de
+}
 .bottom{
   background-color: var(--color-d);
   padding: 1em 0em 2em 0em;
@@ -266,9 +269,29 @@ header .auth--buttons{
   width: fit-content;
   margin: auto;
 }
+
+.up-triangle {
+  width: 0; 
+  height: 0; 
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  
+  border-bottom: 10px solid black;
+}
+
+.down-triangle {
+  width: 0; 
+  height: 0; 
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  
+  border-top: 10px solid black;
+}
+
 .greetings{
-  width: fit-content;
-  width: 30em;
+  
+  min-width: 20rem;
+  max-width: 25rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

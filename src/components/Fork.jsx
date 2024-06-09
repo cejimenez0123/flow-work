@@ -30,7 +30,7 @@ export default function Fork({root}){
 
     const changeUrl =(root)=>{
         if(localStorage.getItem("token")!=="null" && localStorage.getItem("token")!==null && 
-        ((root.userId !== Enviroment.ADMIN_UID && !Enviroment.root_array.includes(root.id)
+        ((root.userId !== null && !Enviroment.root_array.includes(root.id)
             ))){
             
             setUrl(Enviroment.BASE_URL+`/fork/protected/children/${root.id}`)
@@ -104,10 +104,10 @@ export default function Fork({root}){
     }
 
     const AddButton =()=>{
-    if(root && ((root.userId !== Enviroment.ADMIN_UID)||(loggedIn ))){
+    if(root && ((root.userId !== null)||(loggedIn ))){
            return <div className="button--div"><button className="add--button" onClick={showDialog}>+</button></div>
         }else{
-       if(root.userId!==Enviroment.ADMIN_UID||Enviroment.root_array.includes(root.id)){
+       if(root.userId!==null||Enviroment.root_array.includes(root.id)){
             return<div className="create--disabled">
                 <button className="add--button disabled"disabled>+</button>
                 <div className="disabled--div">

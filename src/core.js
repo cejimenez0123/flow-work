@@ -1,5 +1,5 @@
 const RAILWAY_URL="https://flow-node-production.up.railway.app"
-const DEV_URL ="http://localhost:3000"
+const DEV_URL ="http://localhost:4000"
 const WorkHigh = {
     id:"65ce77bcd2bd472600937db2"
 }
@@ -15,16 +15,25 @@ const WorkLow = {
 const Walk = {
     id:"65ce786ad2bd472600937db8"
 }
+const Low ={
+    id:"65ce716ed5fdcc737951f33a"
+}
+const High = {
+    id:"65ce7183d5fdcc737951f33b"
+}
 const Clean = {
     id: "65ce78e1d2bd472600937dbe"
 }
 const Draw = {
     id:"65ce78a3d2bd472600937dbd"
 }
+const Focus ={
+    id:"65ce6f093ed66e8a5da96c07"
+}
 const Enviroment = {
-    BASE_URL: RAILWAY_URL,
-    ADMIN_UID:"65d3a68043f11b3ea66838f7",
-    WORK_ARRAY:[WorkLow.id,WorkHigh.id,RelaxHigh.id,RelaxLow.id],
+    BASE_URL: DEV_URL,
+    createURL: (path)=>{return DEV_URL+path},
+    WORK_ARRAY:[Low.id,High.id,Focus.id],
     root_array:[
       
         WorkLow.id,

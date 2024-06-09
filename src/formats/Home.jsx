@@ -25,7 +25,7 @@ function Home({appRef,headerRef}){
     btnRef.current.style.color = hsvaToHex(textHsva)
   },[])
     const adjustBackgroundColor = (color)=>{
-      // console.log(backgroundHsva)
+   
             setBackgroundHsva({ ...backgroundHsva, ...color.hsva})
             let hex = hsvaToHex(backgroundHsva)
            
@@ -56,7 +56,7 @@ const adjustTextColor = (color)=>{
     }
     setStyle(style)
     useCaseUpdateUser({style},(user)=>{
-      console.log(style)
+    
       window.alert("saved")
     })
   }
@@ -68,7 +68,7 @@ const adjustTextColor = (color)=>{
         case "s":{
           let hsva  = backgroundHsva
           hsva.s = parseInt(value.currentTarget.value) 
-          console.log(hsva)
+       
           setBackgroundHsva(hsva)
           let hex = hsvaToHex(backgroundHsva)
       appRef.current.style.backgroundColor = hex
@@ -78,7 +78,7 @@ const adjustTextColor = (color)=>{
       case "h":{
 
         let hsva  = backgroundHsva
-        console.log(hsva)
+       
         hsva.h = parseInt(value.currentTarget.value)
         setBackgroundHsva(hsva)
         let hex = hsvaToHex(backgroundHsva)
@@ -135,7 +135,7 @@ const adjustTextColor = (color)=>{
   const handleTabClick = (e)=>{
     switch(e.currentTarget){
       case bgRef:{
-        console.log()
+     
         bgRef.current.checked = true
         textRef.current.style = false
         priRef.current.style = false

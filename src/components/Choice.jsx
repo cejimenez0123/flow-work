@@ -11,7 +11,7 @@ export default function Choice({choice,handleChoice}){
     }
   
     const CheckedInputs=()=>{
-        if(fork && fork.userId && fork.userId !== Enviroment.ADMIN_UID)
+        if(fork && fork.userId && fork.userId !== null)
         return checked?
             <div><Button ><DeleteIcon/></Button> <Button>Cancel</Button></div>:
             <div><Checkbox checked={checked} onClick={()=>setChecked(!checked)}/></div>

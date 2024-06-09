@@ -11,12 +11,7 @@ export default function useForkChildren({fork}){
     const { data,error,isLoading } = useSWR([url,localStorage.getItem("token")??""], ([url, token]) => fetcher(url,token))
     const [state,setState]=useState({choices:data??[],error:error,isLoading:isLoading})
     const {auth}=useContext(MyContext)
-    // const changeUrl =(root)=>{
-    //     if(auth){ 
-    //         setUrl(Enviroment.BASE_URL+`/fork/protected/children/${root.id}`)
-    //     }else{
-    //         setUrl(Enviroment.BASE_URL+`/fork/children/${root.id??"65ce6f093ed66e8a5da96c07"}`)
-    //     }
+
     // }
     useEffect(()=>{
         // changeUrl(fork)
@@ -27,8 +22,38 @@ export default function useForkChildren({fork}){
         }
     },[auth])
     useEffect(()=>{
-        setState({choices:data??[],error:error,isLoading:isLoading})
+        let sorted = data?sortByLatestDate(data):[]
+        setState({choices:sorted,error:error,isLoading:isLoading})
 
     },[data])
     return state
 }
+function sortByLatestDate(data) {
+    // Use the sort method with a custom comparison function
+    return data.sort((a, b) => {
+      // Convert date strings to Date objects
+      if(a.dueDate!=null && b.dueDate!=null){
+      const dateA = a.dueDate?new Date(a.dueDate):new Date(); // Assuming "date" is the property containing the date
+      const dateB = b.dueDate?new Date(b.dueDate):new Date();
+  
+      // Use getTime() to get timestamps in milliseconds
+      const timestampA = dateA.getTime()
+      const timestampB = dateB.getTime();
+  
+      // Sort by descending order (later date has higher timestamp)
+      return timestampA - timestampB ;
+      }else{
+        if(a.created && b.created){
+            const dateA = a.dueDate?new Date(a.dueDate):new Date(); // Assuming "date" is the property containing the date
+            const dateB = b.dueDate?new Date(b.dueDate):new Date();
+        
+            // Use getTime() to get timestamps in milliseconds
+            const timestampA = dateA.getTime()
+            const timestampB = dateB.getTime();
+        
+            // Sort by descending order (later date has higher timestamp)
+            return timestampA- timestampB ;
+        }
+      }
+    });
+  }

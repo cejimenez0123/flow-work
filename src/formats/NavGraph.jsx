@@ -142,7 +142,7 @@ export default function NavGraph({appRef}){
             navigate(Router.base.createRoute())
           }
           const hideDialog =()=>setAuthentication(null)
-console.log(style)
+
           return(
             <div>
 

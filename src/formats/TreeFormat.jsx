@@ -49,7 +49,7 @@ export default function TreeFormat(props){
       <div className='tree--format' >
       <div className='top'>
       
-      {!auth?<div className='greetings'>
+      {!auth?<div className='greetings m:w-64 text-shadow'>
         <div>
         {index==greetings.length-1?<h4>Mindfulness</h4>:null}
       <h2>
