@@ -103,19 +103,14 @@ function TaskInfoForm({fork,removeTask,updateTask}){
         if(loggedIn && notAdmin){
             setOnMouseDown(true)
         } 
-     }
-     const handleDueDate = (value)=>{
-        setDueDate(!dueDate)
-     }
-     console.log(fork)
-    
+     } 
      const [expandDate,setExpandDate]=useState(false)
 
      const [expandColor,setExpandColor]=useState(false)
-    return(<div className='create--div'>
-            <form className='create--form form-control'>
+    return(<div className='create--div rounded-3xl' >
+            <form className=' px-4  py-6 form-control'>
             {!onMouseDown?
-            <h3 className={`info--name text-xl mb-4`} 
+            <h3 className={`info--name text-xl mx-6 mb-4`} 
                 onMouseOver={(e)=>handleOnMouseDown(e)}>
                     {name}
             </h3>   :
@@ -130,7 +125,7 @@ function TaskInfoForm({fork,removeTask,updateTask}){
                     border 
                     border-solid `} value= {name} label="Name" />}
                 {fork.link!==null && fork.link.length>2?<Link className={`btn btn-info`} to={fork.link}>Dive in</Link>:null}
-            {!onMouseDown?<p className='info--textarea' onMouseOver={(e)=>handleOnMouseDown(e)}> 
+            {!onMouseDown?<p className='info--textarea mx-2' onMouseOver={(e)=>handleOnMouseDown(e)}> 
             {description}</p>:
             <textarea  value={description} 
             placeholder='Description'
@@ -203,20 +198,21 @@ function TaskInfoForm({fork,removeTask,updateTask}){
 </div>
 :null}
 
-                {notAdmin && auth?
-                <label className="label cursor-pointer w-1/2 mt-4">
-                <span className="label-text text-black text-xl ml-2 color-green">Done</span> 
                
-               <input type="checkbox" onChange={()=>setCompleted(!completed)} className='checkbox checkbox-accent'/>
-              </label>:null}
                     
-                {auth && notAdmin?  <div className='info--buttons'>
-                    <Button type="submit" style={{backgroundColor:hsvaToHex(backhsva)}} onClick={updateFork}className='info--update'>
+                {auth && notAdmin?  <div className="flex flex-row mx-2 space-x-4">
+                   
+                    <div onClick={deleteTask} 
+                    className='info--delete btn btn-error text-white' ><DeleteOutlineIcon/></div>
+                     <div style={{backgroundColor:hsvaToHex(backhsva)}} 
+                    onClick={updateFork}className='w-[82%] text-white mr-4 btn btn-info'>
                         Update
-                    </Button>
-                    <Button onClick={deleteTask} 
-                    className='info--delete' style={{borderRadius:"1em",backgroundColor:"maroon"}}><DeleteOutlineIcon/></Button></div>
+                    </div></div>
                  :null}
+                  {notAdmin && auth?
+                
+                <div className='btn btn-accent mx-2 mt-4 text-white '>Done</div>
+    :null}
                 
             </form>
 

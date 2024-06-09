@@ -31,7 +31,7 @@ const Focus ={
     id:"65ce6f093ed66e8a5da96c07"
 }
 const Enviroment = {
-    BASE_URL: DEV_URL,
+    BASE_URL: RAILWAY_URL,
     createURL: (path)=>{return DEV_URL+path},
     WORK_ARRAY:[Low.id,High.id,Focus.id],
     root_array:[

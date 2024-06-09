@@ -129,22 +129,35 @@ function ForkBranch({fork,defaultOpen,removeRoot}){
                         <AddChoice/>
        
         </ul>
-        <Dialog fullScreen={smallScreen?true:false}open={openInfo} onClose={()=>setOpenInfo(false)}>
-        <div>
+        <Dialog PaperProps={{ sx: { borderRadius: "50px" } }}
+                fullScreen={smallScreen?true:false}
+                open={openInfo} 
+                onClose={()=>setOpenInfo(false)}>
+      <div className="pt-4 px-2">
+        <div  >
               <IconButton onClick={()=>setOpenInfo(false)}>
               <ClearIcon/>
               </IconButton>
             </div>
-            <TaskInfoForm fork={fork} removeTask={(root)=>removeRoot(root)} updateTask={(style)=>updateTask(style)}/>
+            <TaskInfoForm fork={fork} 
+                          removeTask={(root)=>removeRoot(root)} updateTask={(style)=>updateTask(style)}/>
+    </div>
         </Dialog>
-        <Dialog fullScreen={smallScreen?true:false}  open={openDialog} onClose={hideDialog}>
+        
+        <Dialog 
+        PaperProps={{ sx: { borderRadius: "50px" } }}
+            fullScreen={smallScreen?true:false}  
+            open={openDialog} onClose={hideDialog}>
+               <div className="pt-4 px-2">
             <div>
               <IconButton onClick={hideDialog}>
               <ClearIcon/>
               </IconButton>
             </div>
           <CreateTaskForm parentFork={fork} handleNew={(data)=>addChoice(data)}/>
+          </div>
         </Dialog>
+       
     </div>
       
     )

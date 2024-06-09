@@ -2,13 +2,7 @@ import  React,{ useState ,useRef, useEffect, forwardRef } from 'react'
 import './App.css'
 import "./SmallApp.css"
 import MyContext from './context'
-import Header from './components/Header'
-import TreeFormat from './formats/TreeFormat'
-import { Routes,Route} from "react-router-dom";
-import { Router } from './core'
-import { ThemeProvider } from '@mui/material/styles';
 import User from './data/User'
-import Home from "./formats/Home"
 import NavGraph from './formats/NavGraph'
 
 

@@ -68,10 +68,12 @@ function CreateTaskForm({parentFork,handleNew}){
     return(<div className='create--div'>
             <form className='create--form form-control'>
             
-                <input type="text" placeholder="Task Name" className='input mb-4 bg-white border-solid border mx-4 border-cyan-700' label="Name" value={name} onChange={(e)=>handleName(e)}/>
+                <input type="text" placeholder="Task Name"
+                 className='input mb-4 bg-white border-solid border w-full mx-3 border-cyan-700' label="Name" value={name} onChange={(e)=>handleName(e)}/>
                 <textarea  value={description} 
+                placeholder='Description of task to keep you focused, writing things down helps'
             onChange={(e)=>handleDescription(e)}
-             className={`textarea textarea-bordered  bg-white `}
+             className={`textarea textarea-bordered mx-4 border-cyan-700 bg-white `}
               type="text"   />
                 <label className='align-middle text-xl w-full mx-4 w-1/2'>Is there a due date
                 <input type="checkbox" className='ml-4 checkbox' checked={dueDate} onClick={()=>setDueDate(!dueDate)} /></label>

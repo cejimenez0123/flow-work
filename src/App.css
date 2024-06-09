@@ -82,14 +82,10 @@ button{
 .create--div{
   min-width: 30em;
   min-height: 20em;
+  
+
 }
-.create--div button{
-  margin-top: 1em;
-  padding: 1em;
-  font-size: 1.2em;
-  background-color: var(--color-d);
-  color:white
-}
+
   .create--form{
     padding: 3em 2em;
     display: flex;
