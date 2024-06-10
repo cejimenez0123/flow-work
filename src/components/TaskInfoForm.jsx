@@ -30,17 +30,11 @@ function TaskInfoForm({fork,removeTask,updateTask}){
     const [description,setDescription] = useState(fork.description??"")
     const [onMouseDown,setOnMouseDown] = useState(false)
     const [colorType,setColorType]=useState(ColorTypes.BACKGROUND)
-    let backHex = { h: 148.69565217391303, s: 0, v: 100, a: 1 }
-    if(fork?.style?.backgroundColor){
-       
-       backHex =hexToHsva(fork?.style?.backgroundColor)
-    }
-    const [backhsva, setBackHsva] = useState(backHex);
-    let colorHex ={ h: 0, s: 0, v: 0, a: 1 }
-    if(fork?.stlye?.color){
-        colorHex= hexToHsva(fork?.stlye?.color)
-    }
-    const [colorHsva, setColorHsva] = useState(colorHex);
+    let backHex = { h: 360, s: 0, v: 100, a: 1 }
+    const [backhsva, setBackHsva] = useState(fork.style !=null && fork.style.backgroundColor?fork.style.backgroundColor:backHex);
+    let colorHex = { h: 360, s: 0, v: 0, a: 1 }
+    const [colorHsva, setColorHsva] = useState(fork.style !=null && fork.style.color?fork.style.color:colorHex);
+ 
     const handleName = (e)=>{
         setName(e.currentTarget.value)
     }
@@ -163,10 +157,15 @@ function TaskInfoForm({fork,removeTask,updateTask}){
                 <div>
                     <div>
                 <div className='inline-flex w-full ph-4 mb-4 m-auto' >
-                    <div className="bg-gray-300 text-shadow hover:bg-gray-400 text-gray-800 text-center font-bold py-2 px-4 rounded-l w-1/2"
+                    <div className="bg-gray-300 
+                                    text-shadow
+                                    hover:bg-gray-400 
+                                    text-gray-800 
+                                    text-center 
+                                    font-bold py-2 px-4 rounded-l w-1/2"
                      onClick={()=>setColorType(ColorTypes.BACKGROUND)} 
-                    style={{backgroundColor:hsvaToHex(backhsva),
-                        color:hsvaToHex(colorHsva),
+                    style={{backgroundColor:backhsva,
+                        color:colorHsva,
                         borderBottom:`1px solid ${colorHsva}`
                     }}>
                        Background
@@ -175,8 +174,8 @@ function TaskInfoForm({fork,removeTask,updateTask}){
                     className='bg-gray-300 hover:bg-gray-400 
                     text-gray-800 font-bold py-2 px-4 text-shadow rounded-r text-center w-1/2 ' 
                     onClick={()=>setColorType(ColorTypes.TEXT)}
-                    style={{backgroundColor:hsvaToHex(backhsva),
-                            color:hsvaToHex(colorHsva),
+                    style={{backgroundColor:backhsva,
+                            color:colorHsva,
                             borderBottom:`1px solid ${colorHsva}`
                     }}>
                        Text Color
@@ -201,7 +200,7 @@ function TaskInfoForm({fork,removeTask,updateTask}){
                 onChange={(color) => {
              
                     setColorHsva({ ...colorHsva, ...color.hsva })
-                    
+                    console.log(colorHsva)
 
             }}/>}
                     </div>
