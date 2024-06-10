@@ -1,12 +1,9 @@
 
 import { useContext, useRef, useEffect, useState } from 'react';
-
-import axios from "axios"
 import "../App.css"
 import MyContext from '../context';
-import Wheel from '@uiw/react-color-wheel';
+import Colorful from '@uiw/react-color-colorful';
 import { hsvaToHex,hexToHsva} from '@uiw/color-convert';
-import EditableInputHSLA from '@uiw/react-color-editable-input-hsla';
 import useCaseUpdateUser from '../useCases/useCaseUpdateUser';
 
 function Home({appRef,headerRef}){
@@ -198,9 +195,11 @@ const adjustTextColor = (color)=>{
   <input type="radio" name="my_tabs_1" role="tab" className="tab " onClick={(e)=>handleTabClick(e)}ref={bgRef}aria-label="Background" defaultChecked/>
   <div role="tabpanel" className="tab-content p-10">
     
-    
-      
-  <Wheel color={backgroundHsva} onChange={(color)=>adjustBackgroundColor(color)} />
+  <Colorful
+         color={backgroundHsva} 
+       
+         onChange={(color)=>adjustBackgroundColor(color)}
+      />
   <h2>Saturation</h2>
   <input type="range" min={0} defaultValue={backgroundHsva.s}
   onChange={value =>adjustBgAttr(value,"s")} max="1" 
@@ -222,7 +221,7 @@ const adjustTextColor = (color)=>{
 
   <input type="radio" name="my_tabs_1" role="tab" className="tab" onClick={(e)=>handleTabClick(e)} ref={priRef} aria-label="Primary" />
   <div role="tabpanel" className="tab-content p-10">
-  <Wheel color={primaryHsva} onChange={(color)=>adjustPrimaryColor(color)}/>
+  <Colorful color={primaryHsva} onChange={(color)=>adjustPrimaryColor(color)}/>
   <h2>Saturation</h2>
   <input type="range" min={0} defaultValue={primaryHsva.s}
   onChange={value =>adjustPrimaryAttr(value,"s")} max="100"  className="range color" step="1" />
@@ -242,7 +241,7 @@ const adjustTextColor = (color)=>{
     
     
     
-  <Wheel color={textHsva} onChange={(color)=>adjustTextColor(color)}/>
+  <Colorful color={textHsva} onChange={(color)=>adjustTextColor(color)}/>
         <h2>Saturation</h2>
         <input type="range" min={0} defaultValue={textHsva.s}
                 onChange={value =>adjustTextAttr(value,"s")}

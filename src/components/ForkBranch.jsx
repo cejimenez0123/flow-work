@@ -94,8 +94,7 @@ function ForkBranch({fork,defaultOpen,removeRoot}){
         }else if(!isDaysAhead(date,30)){
           priorityColor = PriorityColors.Low
         }
-// Use the toLocaleDateString() method to format the date in MM/DD format
-    dueDateStr = date.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit' });
+     dueDateStr = date.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit' });
       
   }
 
@@ -145,7 +144,7 @@ function ForkBranch({fork,defaultOpen,removeRoot}){
         </Dialog>
         
         <Dialog 
-        PaperProps={{ sx: { borderRadius: "50px" } }}
+        PaperProps={{ sx: { borderRadius: smallScreen?"": "50px" } }}
             fullScreen={smallScreen?true:false}  
             open={openDialog} onClose={hideDialog}>
                <div className="pt-4 px-2">

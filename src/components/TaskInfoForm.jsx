@@ -1,5 +1,3 @@
-
-import {Button} from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useContext, useEffect, useState ,useRef} from 'react';
 import Enviroment from '../core';
@@ -10,14 +8,13 @@ import useCaseDeleteTask from '../useCases/useCaseDeleteTasks';
 import useCaseUpdateFork from '../useCases/useCaseUpdateFork';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import MyContext from '../context';
-import Wheel from '@uiw/react-color-wheel';
+import Colorful from '@uiw/react-color-colorful';
 import { hsvaToHex,hexToHsva } from '@uiw/color-convert';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 function TaskInfoForm({fork,removeTask,updateTask}){
     const token = localStorage.getItem("token")
-    const btnRef = useRef()
     const ColorTypes ={
         BACKGROUND:"BACK",
         TEXT:"TEXT"
@@ -33,14 +30,13 @@ function TaskInfoForm({fork,removeTask,updateTask}){
     const [description,setDescription] = useState(fork.description??"")
     const [onMouseDown,setOnMouseDown] = useState(false)
     const [colorType,setColorType]=useState(ColorTypes.BACKGROUND)
-    let backHex = { h: 214, s: 43, v: 90, a: 1 }
-
+    let backHex = { h: 148.69565217391303, s: 0, v: 100, a: 1 }
     if(fork?.style?.backgroundColor){
        
        backHex =hexToHsva(fork?.style?.backgroundColor)
     }
     const [backhsva, setBackHsva] = useState(backHex);
-    let colorHex ={ h: 0, s: 0, v: 100, a: 1 }
+    let colorHex ={ h: 0, s: 0, v: 0, a: 1 }
     if(fork?.stlye?.color){
         colorHex= hexToHsva(fork?.stlye?.color)
     }
@@ -169,7 +165,9 @@ function TaskInfoForm({fork,removeTask,updateTask}){
                 <div className='inline-flex w-full ph-4 mb-4 m-auto' >
                     <div className="bg-gray-300 text-shadow hover:bg-gray-400 text-gray-800 text-center font-bold py-2 px-4 rounded-l w-1/2"
                      onClick={()=>setColorType(ColorTypes.BACKGROUND)} 
-                    style={{backgroundColor:hsvaToHex(backhsva),color:hsvaToHex(colorHsva),
+                    style={{backgroundColor:hsvaToHex(backhsva),
+                        color:hsvaToHex(colorHsva),
+                        borderBottom:`1px solid ${colorHsva}`
                     }}>
                        Background
                     </div>
@@ -179,24 +177,38 @@ function TaskInfoForm({fork,removeTask,updateTask}){
                     onClick={()=>setColorType(ColorTypes.TEXT)}
                     style={{backgroundColor:hsvaToHex(backhsva),
                             color:hsvaToHex(colorHsva),
+                            borderBottom:`1px solid ${colorHsva}`
                     }}>
                        Text Color
                     </div>
                 </div>
                 <div className='w-64 m-auto'>
                 {colorType==ColorTypes.BACKGROUND?
-                <Wheel color={backhsva} onChange={(color) => setBackHsva({ ...backhsva, ...color.hsva })} />
-                :
-               <Wheel color={colorHsva} onChange={(color) => setColorHsva({ ...colorHsva, ...color.hsva })} />
-            }
-            </div>
-      
-                   </div>
-                   </div>
+                  <Colorful
+                  color={backhsva}
+              
+                  onChange={(color) => {
                    
-  </div>
-</div>
-:null}
+                    setBackHsva({ ...backhsva, ...color.hsva })
+                  
+                    }  }
+                />
+
+                :
+                <Colorful
+                color={colorHsva}
+            
+                onChange={(color) => {
+             
+                    setColorHsva({ ...colorHsva, ...color.hsva })
+                    
+
+            }}/>}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>:null}
 
                
                     
@@ -204,8 +216,8 @@ function TaskInfoForm({fork,removeTask,updateTask}){
                    
                     <div onClick={deleteTask} 
                     className='info--delete btn btn-error text-white' ><DeleteOutlineIcon/></div>
-                     <div style={{backgroundColor:hsvaToHex(backhsva)}} 
-                    onClick={updateFork}className='w-[82%] text-white mr-4 btn btn-info'>
+                     <div  
+                    onClick={updateFork}className='w-[82%] text-shadow text-white mr-4 btn btn-info'>
                         Update
                     </div></div>
                  :null}

@@ -42,6 +42,7 @@ export default function NavGraph({appRef}){
                 localStorage.setItem("tokenTimestamp",JSON.stringify( Date.now()));
                 localStorage.setItem('token',token)
               }).catch(err=>{
+                console.log(err)
                 setErr(err.message)
               })
           }
