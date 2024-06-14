@@ -16,7 +16,8 @@ const PriorityColors={
   Medium:"#f97316",
   Low:"#fbbf24"
 }
-function ForkBranch({fork,defaultOpen,removeRoot}){
+function ForkBranch({task,defaultOpen,removeRoot}){
+    const [fork,setFork]=useState(task)
     const [active,setActive]=useState(defaultOpen?defaultOpen:false)
     const [openDialog,setOpenDialog]=useState(false)
     const [openInfo,setOpenInfo]=useState(false)
@@ -37,21 +38,19 @@ function ForkBranch({fork,defaultOpen,removeRoot}){
       if(auth && !Enviroment.WORK_ARRAY.includes(fork.id)){
         return (<li onClick={showDialog} 
           className='fork--branch pt-4 pb-4 add'><span   
-        className='branch--add'><AddIcon/></span><p className={`branch--text `}>Add Task</p></li>)
+        className='branch--add'><AddIcon/></span><p className={`branch--text text-2xl text-shadow `}>Add Task</p></li>)
       }else{
         if(!Enviroment.WORK_ARRAY.includes(fork.id)&&!auth){
         return(<li onClick={showDialog}
          className='fork--branch add'> 
-          <p  className="branch--text pt-4 pb-4 add">Sign up to add task</p><span   
+          <p  className="branch--text pt-4 pb-4 text-2xl text-shadow add">Sign up to add task</p><span   
         className='branch--add'></span></li>)
       }
       }
     }
         
         
-    const updateTask = (style)=>{
-      setStyle(style)
-    }
+  
     if(isLoading){
         return(<div><Skeleton height={"5em"}/></div>)
       }
@@ -93,6 +92,8 @@ function ForkBranch({fork,defaultOpen,removeRoot}){
           priorityColor = PriorityColors.Medium
         }else if(!isDaysAhead(date,30)){
           priorityColor = PriorityColors.Low
+        }else{
+          priorityColor=""
         }
      dueDateStr = date.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit' });
       
@@ -102,18 +103,26 @@ function ForkBranch({fork,defaultOpen,removeRoot}){
       return(
      <div>
       
-      <li style={{backgroundColor:style.backgroundColor,borderLeft: !isDaysAhead(fork.dueDate,30)&&dueDateStr.length>2?`0.7rem solid ${priorityColor}`:""}}onClick={handleOpen} className={`pt-4 pb-4 fork--branch`}>
+      <li style={{backgroundColor:fork.style&& fork.style.backgroundColor?
+            fork.style.backgroundColor:"",borderLeft: !isDaysAhead(fork.dueDate,30)&&dueDateStr.length>2?`0.7rem solid ${priorityColor}`:""}}onClick={handleOpen} className={`pt-4 pb-4 fork--branch`}>
         
-        <span className="fork--span" >
-        <span className="caret" >
+        <span className="fork--span " >
+        <span className={`caret ${priorityColor.length>1?"":"pl-2"}`} >
           {active? <ExpandMoreIcon >
       
     </ExpandMoreIcon>:<ChevronRightIcon />}
         </span>
         
-        <p onClick={()=>setOpenInfo(true)} style={{color:fork.style && fork.style.color?fork.style.color:""}}
-        className={`branch--text text-shadow flex flex-row text-2xl pr-4 tracking-wider `} >
-         {dueDateStr}<span className={`${dueDateStr.length>2?"ml-4":""}`}> {fork.name?fork.name:"Untitled"}</span>
+        <p onClick={()=>setOpenInfo(true)}
+           style={{
+            color:fork.style && fork.style.color?fork.style.color:""}}
+        className={`branch--text 
+                    text-shadow 
+                    h-auto flex 
+                    flex-row 
+                    
+                    text-2xl pr-4 tracking-wider `} >
+         <span className={` `}> {fork.name.length>=1?fork.name:"Untitled"}</span>
           </p></span>
           </li> 
           
@@ -122,7 +131,8 @@ function ForkBranch({fork,defaultOpen,removeRoot}){
               
                     let choice= useCaseUnpackFork(node)
                     
-                return <ForkBranch key={node.id} fork={choice}  removeRoot={(root)=>removeTask(root)}/>
+                return <ForkBranch key={node.id} task={choice}
+                 removeRoot={(root)=>removeTask(root)}/>
             })}
   
                         <AddChoice/>
@@ -138,16 +148,19 @@ function ForkBranch({fork,defaultOpen,removeRoot}){
               <ClearIcon/>
               </IconButton>
             </div>
-            <TaskInfoForm fork={fork} 
-                          removeTask={(root)=>removeRoot(root)} updateTask={(style)=>updateTask(style)}/>
+            <TaskInfoForm task={fork} 
+                          removeTask={(root)=>removeRoot(root)}
+                          updateTask={(fork)=>{
+                          setFork(fork)
+                          }}/>
     </div>
         </Dialog>
         
         <Dialog 
-        PaperProps={{ sx: { borderRadius: smallScreen?"": "50px" } }}
+        PaperProps={{ sx: { borderRadius: smallScreen?"": "1em" } }}
             fullScreen={smallScreen?true:false}  
             open={openDialog} onClose={hideDialog}>
-               <div className="pt-4 px-2">
+               <div className="pt-4 px-2 ">
             <div>
               <IconButton onClick={hideDialog}>
               <ClearIcon/>

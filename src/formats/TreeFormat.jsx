@@ -63,9 +63,9 @@ export default function TreeFormat(props){
       </div>
       :<div></div>}
       </div>
-      <div style={{backgroundColor:style.primary}}  className='bottom'>
+      <div style={{backgroundColor:style.primary}}  className='bottom h-screen w-screen'>
         {!fork?<Loading/>: <ul  id="tree" >
-      <ForkBranch defaultOpen={true} fork={fork}/>
+      <ForkBranch defaultOpen={true} task={fork}/>
       </ul>}
    
       </div>

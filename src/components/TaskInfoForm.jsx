@@ -1,9 +1,13 @@
 import { Link } from 'react-router-dom';
 import { useContext, useEffect, useState ,useRef} from 'react';
 import Enviroment from '../core';
-import dayjs from 'dayjs';;
 import axios from "axios"
 import "../App.css"
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
+import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import useCaseDeleteTask from '../useCases/useCaseDeleteTasks';
 import useCaseUpdateFork from '../useCases/useCaseUpdateFork';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
@@ -12,19 +16,22 @@ import Colorful from '@uiw/react-color-colorful';
 import { hsvaToHex,hexToHsva } from '@uiw/color-convert';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import useCaseUnpackFork from '../useCases/useCaseUnpackFork';
 
-function TaskInfoForm({fork,removeTask,updateTask}){
+function TaskInfoForm({task,removeTask,updateTask}){
     const token = localStorage.getItem("token")
     const ColorTypes ={
         BACKGROUND:"BACK",
         TEXT:"TEXT"
     }
+    const [fork,setFork]=useState(task)
     const loggedIn = token!==null&&token!=="null"
     const notAdmin = fork.userId!==null
     const {auth}=useContext(MyContext)
-    const [name,setName]=useState(fork.name)
+    const [name,setName]=useState(fork.name?fork.name:"Untitled")
     const [subTasks,setSubTasks]=useState([])
-    const [date, setDate] = useState(dayjs(fork.dueDate));
+    const [date, setDate] = useState(dayjs(fork.dueDate))
+
     const [dueDate, setDueDate] = useState(fork.dueDate!==null)
     const [completed,setCompleted]=useState(false)
     const [description,setDescription] = useState(fork.description??"")
@@ -34,7 +41,7 @@ function TaskInfoForm({fork,removeTask,updateTask}){
     const [backhsva, setBackHsva] = useState(fork.style !=null && fork.style.backgroundColor?fork.style.backgroundColor:backHex);
     let colorHex = { h: 360, s: 0, v: 0, a: 1 }
     const [colorHsva, setColorHsva] = useState(fork.style !=null && fork.style.color?fork.style.color:colorHex);
- 
+
     const handleName = (e)=>{
         setName(e.currentTarget.value)
     }
@@ -57,18 +64,24 @@ function TaskInfoForm({fork,removeTask,updateTask}){
     }
 
     const updateFork = ()=>{
+        console.log(backhsva)
+        console.log(hsvaToHex(backhsva))
         const params = {
             fork,
             name,
             dueDate:date,
-            style:{backgroundColor: hsvaToHex(backhsva),color:hsvaToHex(colorHsva)},
+            style:{backgroundColor: hsvaToHex(backhsva)
+                ,color:hsvaToHex(colorHsva)},
             completed,
             description
         }
+        console.log(params)
         useCaseUpdateFork(params,(result)=>{
            
+            let task = useCaseUnpackFork(result.data)
+            setFork(task)
+            updateTask(task)
         })
-        updateTask(params.style)
     }
     const getTasksSubTasks = ()=>{
             recursive(fork.id)
@@ -135,13 +148,12 @@ function TaskInfoForm({fork,removeTask,updateTask}){
  
             
             <div className='date--picker w-full'>
-         
-             <input className="border-solid input bg-white w-full" 
-                    type="date"    
-                    id="start" 
-                    onChange={(e)=>setDate(e.target.value)}
-                     name="trip-start" value={date} min={today}  />
-</div>      
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <MobileDateTimePicker defaultValue={dayjs(date)} onChange={(day)=>{setDate(day["$d"])}
+
+            } minDateTime={dayjs(Date.now())} />
+            </LocalizationProvider>
+               </div>      
   </div>
 </div>:null}
             
@@ -164,8 +176,8 @@ function TaskInfoForm({fork,removeTask,updateTask}){
                                     text-center 
                                     font-bold py-2 px-4 rounded-l w-1/2"
                      onClick={()=>setColorType(ColorTypes.BACKGROUND)} 
-                    style={{backgroundColor:backhsva,
-                        color:colorHsva,
+                    style={{backgroundColor:hsvaToHex(backhsva),
+                        color:hsvaToHex(colorHsva),
                         borderBottom:`1px solid ${colorHsva}`
                     }}>
                        Background
@@ -174,8 +186,8 @@ function TaskInfoForm({fork,removeTask,updateTask}){
                     className='bg-gray-300 hover:bg-gray-400 
                     text-gray-800 font-bold py-2 px-4 text-shadow rounded-r text-center w-1/2 ' 
                     onClick={()=>setColorType(ColorTypes.TEXT)}
-                    style={{backgroundColor:backhsva,
-                            color:colorHsva,
+                    style={{backgroundColor:hsvaToHex(backhsva),
+                        color:hsvaToHex(colorHsva),
                             borderBottom:`1px solid ${colorHsva}`
                     }}>
                        Text Color
@@ -200,7 +212,7 @@ function TaskInfoForm({fork,removeTask,updateTask}){
                 onChange={(color) => {
              
                     setColorHsva({ ...colorHsva, ...color.hsva })
-                    console.log(colorHsva)
+                 
 
             }}/>}
                     </div>
@@ -229,4 +241,5 @@ function TaskInfoForm({fork,removeTask,updateTask}){
 
     </div>)
 }
+
 export default TaskInfoForm
